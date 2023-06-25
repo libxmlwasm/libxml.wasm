@@ -14,4 +14,4 @@ RUN \
 
 USER emscripten
 WORKDIR /home/emscripten
-RUN embuilder build icu zlib
+RUN embuilder build icu

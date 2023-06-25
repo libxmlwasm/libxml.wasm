@@ -1,6 +1,5 @@
 #!/bin/bash -e
 
-# https://download.gnome.org/sources/libxml2/2.11/libxml2-2.11.4.tar.xz
 VERSION="2.11.4"
 DIRNAME="libxml2-${VERSION}"
 FILENAME="${DIRNAME}.tar.xz"
@@ -24,7 +23,9 @@ emcmake cmake -S "$DIRNAME" -B "$DIRNAME/build" -GNinja -DCMAKE_INSTALL_PREFIX=$
   -DLIBXML2_WITH_FTP=ON \
   -DLIBXML2_WITH_XPTR_LOCS=ON \
   -DLIBXML2_WITH_PYTHON=OFF \
-  -DLIBXML2_WITH_LZMA=OFF
+  -DLIBXML2_WITH_LZMA=OFF \
+  -DZLIB_LIBRARY="$PREFIX/lib/libz.a" \
+  -DZLIB_INCLUDE_DIR="$PREFIX/include"
 emmake cmake --build "$DIRNAME/build" -j$(nproc)
 cmake --install "$DIRNAME/build"
 rm -fr "$DIRNAME"

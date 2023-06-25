@@ -6,35 +6,40 @@
 #include <libxml/xpath.h>
 
 // #ifdef __EMSCRIPTEN__
-#include "emscripten.h"
+// #include "emscripten.h"
+// #include <emscripten/emscripten.h>
 #include <emscripten/bind.h>
-#include <emscripten/emscripten.h>
 // #else
-// #define EMSCRIPTEN_KEEPALIVE
 // #endif
 
 using namespace std;
+using namespace emscripten;
 
-htmlDocPtr createHTMLDoc(const char *htmlChar) {
+htmlDocPtr createHTMLDoc(const char *htmlChar)
+{
   htmlDocPtr doc =
       htmlReadMemory(htmlChar, strlen(htmlChar), "index.html", NULL, 0);
-  if (doc == NULL) {
+  if (doc == NULL)
+  {
     printf("error: could not parse file\n");
     throw "error: could not parse file";
   }
   return doc;
 }
 
-xmlNodeSetPtr getNode(htmlDocPtr doc, const xmlChar *xpathChar) {
+xmlNodeSetPtr getNode(htmlDocPtr doc, const xmlChar *xpathChar)
+{
   xmlXPathContextPtr xpathCtx = xmlXPathNewContext(doc);
-  if (xpathCtx == NULL) {
+  if (xpathCtx == NULL)
+  {
     printf("error: unable to create new XPath context\n");
     xmlFreeDoc(doc);
     throw "error: unable to create new XPath context";
   }
 
   xmlXPathObjectPtr xpathObj = xmlXPathEvalExpression(xpathChar, xpathCtx);
-  if (xpathObj == NULL) {
+  if (xpathObj == NULL)
+  {
     printf("error: unable to evaluate xpath expression \"%s\"\n", xpathChar);
     xmlXPathFreeContext(xpathCtx);
     xmlFreeDoc(doc);
@@ -42,7 +47,8 @@ xmlNodeSetPtr getNode(htmlDocPtr doc, const xmlChar *xpathChar) {
   }
 
   xmlNodeSetPtr nodes = xpathObj->nodesetval;
-  if (nodes == NULL) {
+  if (nodes == NULL)
+  {
     printf("error: nodes was NULL\n");
     xmlXPathFreeObject(xpathObj);
     xmlXPathFreeContext(xpathCtx);
@@ -52,23 +58,27 @@ xmlNodeSetPtr getNode(htmlDocPtr doc, const xmlChar *xpathChar) {
   return nodes;
 }
 
-int getElementByXpath(const char *xmlstr, const char* xpathStr) {
-  htmlDocPtr doc = createHTMLDoc(xmlstr);
-  if (doc == NULL) {
+int getElementByXpath(const char *xmlstr, const char *xpathStr)
+{
+  htmlDocPtr doc = ::createHTMLDoc(xmlstr);
+  if (doc == NULL)
+  {
     printf("error: could not parse file\n");
     return 1;
   }
 
-  xmlNodeSetPtr nodes = getNode(doc, (xmlChar*)xpathStr);
+  xmlNodeSetPtr nodes = ::getNode(doc, (xmlChar *)xpathStr);
 
-  if (nodes->nodeMax == 0) {
+  if (nodes->nodeMax == 0)
+  {
     printf("error: no nodes found\n");
     xmlFreeDoc(doc);
     return 1;
   }
 
   // show nodes
-  for (int i = 0; i < nodes->nodeNr; i++) {
+  for (int i = 0; i < nodes->nodeNr; i++)
+  {
     xmlNodePtr node = nodes->nodeTab[i];
     xmlChar *content = xmlNodeGetContent(node);
     printf("content: %s\n", content);
@@ -77,20 +87,100 @@ int getElementByXpath(const char *xmlstr, const char* xpathStr) {
   return 0;
 }
 
-int main(int argc, char *argv[]) {
-  char* xmlstr = "<div><h1>Foo</h1></div>";
-  char* xpathStr = "//h1";
+// int main(int argc, char *argv[]) {
+//   char* xmlstr = "<div><h1>Foo</h1></div>";
+//   char* xpathStr = "//h1";
+//   getElementByXpath(xmlstr, xpathStr);
+//   return 0;
+// }
 
-  getElementByXpath(xmlstr, xpathStr);
+class Node {
+public:
+  Node(xmlNodePtr node) : node(node) {}
+  ~Node() {
+  }
+  string getContent() {
+    xmlChar *content = xmlNodeGetContent(node);
+    string contentStr((char *)content);
+    xmlFree(content);
+    return contentStr;
+  }
+private:
+  xmlNodePtr node;
+};
 
-  return 0;
+class NodeSet
+{
+public:
+  NodeSet(xmlNodeSetPtr nodes) : nodes(nodes) {}
+  ~NodeSet() {
+  }
+  int getLength() {
+    return nodes->nodeNr;
+  }
+  Node getNode(int i)
+  {
+    return Node(nodes->nodeTab[i]);
+  }
+
+private:
+  xmlNodeSetPtr nodes;
+};
+
+class Document
+{
+public:
+  Document(string htmlChar) : htmlChar(htmlChar)
+  {
+    doc = createHTMLDoc(htmlChar.c_str());
+    if (doc == NULL)
+    {
+      std::cout << "error: could not parse file" << std::endl;
+      throw "error: could not parse file";
+    } else {
+      std::cout << "success: could parse file" << std::endl;
+    }
+  }
+  ~Document() {
+    xmlFreeDoc(doc);
+  }
+  NodeSet getNode(string xpathChar)
+  {
+    xmlNodeSetPtr nodes = ::getNode(doc, (xmlChar*)xpathChar.c_str());
+    if (nodes->nodeMax == 0)
+    {
+      std::cout << "error: no nodes found" << std::endl;
+      // xmlFreeDoc(doc);
+      // throw "error: no nodes found";
+    }
+    return NodeSet(nodes);
+  }
+
+private:
+  htmlDocPtr doc;
+  string htmlChar;
+};
+
+Document parseHTML(string docStr) {
+  return Document(docStr);
 }
 
-EMSCRIPTEN_BINDINGS(LibXMLWasm) {
+EMSCRIPTEN_BINDINGS(LibXMLWasm)
+{
   emscripten::function(
       "getElementByXpath",
       emscripten::optional_override(
-          [](const std::string xmlstr, const std::string xpathStr) {
+          [](const std::string xmlstr, const std::string xpathStr)
+          {
             return getElementByXpath(xmlstr.c_str(), xpathStr.c_str());
           }));
+  class_<Document>("Document")
+      .constructor<std::string>()
+      .function("getNode", &Document::getNode);
+  class_<NodeSet>("NodeSet")
+      .function("getLength", &NodeSet::getLength)
+      .function("getNode", &NodeSet::getNode);
+  class_<Node>("Node")
+      .function("getContent", &Node::getContent);
+  emscripten::function("parseHTML", &parseHTML);
 }

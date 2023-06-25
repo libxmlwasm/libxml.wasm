@@ -13,14 +13,17 @@ set(
 )
 
 find_package(LibXml2 REQUIRED)
-include_directories(${LIBXML2_INCLUDE_DIR})
-link_libraries(${LIBXML2_LIBRARIES})
+# include_directories(${LIBXML2_INCLUDE_DIR})
+# link_libraries(${LIBXML2_LIBRARIES})
 
 add_executable(LibXML_WASM
   "xmlXpath.cc"
 )
 target_include_directories(LibXML_WASM PUBLIC ${LIBXML2_INCLUDE_DIR})
-target_link_libraries(LibXML_WASM ${LIBXML2_LIBRARIES})
+target_link_libraries(LibXML_WASM
+  ${LIBXML2_LIBRARIES}
+  ${CMAKE_CURRENT_SOURCE_DIR}/../prefix/lib/libz.a
+)
 
 set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
 

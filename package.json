@@ -1,5 +1,6 @@
 {
   "name": "libxml_wasm",
   "packageManager": "yarn@3.6.0",
-  "private": true
+  "private": true,
+  "type": "module"
 }

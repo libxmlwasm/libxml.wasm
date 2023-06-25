@@ -1,8 +1,7 @@
 cache/*
 !cache/.gitkeep
 prefix/
-wasm-build/
-wasm-install/
+wasm-*/
 
 # Logs
 logs
