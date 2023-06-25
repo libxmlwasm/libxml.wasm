@@ -23,4 +23,3 @@ lxml.getElementByXpath("<div><h1>Foo</h1></div>", "//h1")
 const doc = lxml.parseHTML("<div><h1>Foo</h1></div>")
 const nodeSet = doc.getNode("//h1")
 console.log("length :", nodeSet.getLength())
-

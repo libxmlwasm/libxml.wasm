@@ -229,13 +229,13 @@ EMSCRIPTEN_BINDINGS(LibXMLWasm)
           {
             return getElementByXpath(xmlstr.c_str(), xpathStr.c_str());
           }));
-  class_<Document>("Document")
-      .constructor<std::string>()
-      .function("getNode", &Document::getNode);
+  class_<Node>("Node")
+      .function("getContent", &Node::getContent);
   class_<NodeSet>("NodeSet")
       .function("getLength", &NodeSet::getLength)
       .function("getNode", &NodeSet::get);
-  class_<Node>("Node")
-      .function("getContent", &Node::getContent);
+  class_<Document>("Document")
+      .constructor<std::string>()
+      .function("getNode", &Document::getNode);
   emscripten::function("parseHTML", &parseHTML);
 }

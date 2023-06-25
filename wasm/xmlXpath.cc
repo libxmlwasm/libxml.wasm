@@ -129,7 +129,7 @@ public:
   ~NodeSet() {
   }
   int getLength() {
-    return nodes->nodeMax;
+    return nodes->nodeNr;
   }
   Node getFirst()
   {

@@ -2,6 +2,7 @@ cache/*
 !cache/.gitkeep
 prefix/
 wasm-*/
+!wasm-test/
 
 # Logs
 logs
