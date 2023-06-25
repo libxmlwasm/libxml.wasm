@@ -13,11 +13,13 @@ set(
 )
 
 find_package(LibXml2 REQUIRED)
+
 # include_directories(${LIBXML2_INCLUDE_DIR})
 # link_libraries(${LIBXML2_LIBRARIES})
-
 add_executable(LibXML_WASM
+  # "original.cc"
   "xmlXpath.cc"
+  "xpathBind.cc"
 )
 target_include_directories(LibXML_WASM PUBLIC ${LIBXML2_INCLUDE_DIR})
 target_link_libraries(LibXML_WASM

@@ -9,14 +9,18 @@ const htmlStr = `
   <title>My First HTML</title>
 </head>
 <body>
-  <h1>My First Heading</h1>
-  <p>My first paragraph.</p>
+  <div class="container">
+    <h1>My First Heading</h1>
+    <p>My first paragraph.</p>
+  </div>
 </body>
 </html>
 `
+const xpath = "//body/h1"
 
-const doc = lxml.parseHTML(htmlStr)
-console.log(doc)
-const nodeSet = doc.getNode(".//body/p")
-console.log(nodeSet)
-console.log(nodeSet.getLength())
+lxml.getElementByXpath("<div><h1>Foo</h1></div>", "//h1")
+
+const doc = lxml.parseHTML("<div><h1>Foo</h1></div>")
+const nodeSet = doc.getNode("//h1")
+console.log("length :", nodeSet.getLength())
+

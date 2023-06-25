@@ -15,20 +15,62 @@
 using namespace std;
 using namespace emscripten;
 
-htmlDocPtr create_HTMLDoc(const char *htmlChar)
+// htmlDocPtr create_HTMLDoc(const char *htmlChar)
+// {
+//   htmlDocPtr doc =
+//       htmlReadMemory(htmlChar, strlen(htmlChar), "index.html", NULL, 0);
+//   if (doc == NULL)
+//   {
+//     printf("error: could not parse file\n");
+//     throw "error: could not parse file";
+//   }
+//   return doc;
+// }
+
+// xmlNodeSetPtr getNodeByXPath(htmlDocPtr doc, const xmlChar *xpathChar)
+// {
+//   xmlXPathContextPtr xpathCtx = xmlXPathNewContext(doc);
+//   if (xpathCtx == NULL)
+//   {
+//     printf("error: unable to create new XPath context\n");
+//     xmlFreeDoc(doc);
+//     throw "error: unable to create new XPath context";
+//   }
+
+//   xmlXPathObjectPtr xpathObj = xmlXPathEvalExpression(xpathChar, xpathCtx);
+//   if (xpathObj == NULL)
+//   {
+//     printf("error: unable to evaluate xpath expression \"%s\"\n", xpathChar);
+//     xmlXPathFreeContext(xpathCtx);
+//     xmlFreeDoc(doc);
+//     throw "error: unable to evaluate xpath expression";
+//   }
+
+//   xmlNodeSetPtr nodes = xpathObj->nodesetval;
+//   if (nodes == NULL)
+//   {
+//     printf("error: nodes was NULL\n");
+//     xmlXPathFreeObject(xpathObj);
+//     xmlXPathFreeContext(xpathCtx);
+//     xmlFreeDoc(doc);
+//     throw "error: nodes was NULL";
+//   }
+//   return nodes;
+// }
+
+int getElementByXpath(const char *xmlstr, const char *xpathStr)
 {
+  std::cout << "xmlstr : " << xmlstr << std::endl;
+  std::cout << "xpathStr : " << xpathStr << std::endl;
+
   htmlDocPtr doc =
-      htmlReadMemory(htmlChar, strlen(htmlChar), "index.html", NULL, 0);
+      htmlReadMemory(xmlstr, strlen(xmlstr), "index.html", NULL, 0);
   if (doc == NULL)
   {
     printf("error: could not parse file\n");
     throw "error: could not parse file";
   }
-  return doc;
-}
 
-xmlNodeSetPtr getNodeByXPath(htmlDocPtr doc, const xmlChar *xpathChar)
-{
   xmlXPathContextPtr xpathCtx = xmlXPathNewContext(doc);
   if (xpathCtx == NULL)
   {
@@ -37,10 +79,10 @@ xmlNodeSetPtr getNodeByXPath(htmlDocPtr doc, const xmlChar *xpathChar)
     throw "error: unable to create new XPath context";
   }
 
-  xmlXPathObjectPtr xpathObj = xmlXPathEvalExpression(xpathChar, xpathCtx);
+  xmlXPathObjectPtr xpathObj = xmlXPathEvalExpression((xmlChar *)xpathStr, xpathCtx);
   if (xpathObj == NULL)
   {
-    printf("error: unable to evaluate xpath expression \"%s\"\n", xpathChar);
+    printf("error: unable to evaluate xpath expression \"%s\"\n", (xmlChar *)xpathStr);
     xmlXPathFreeContext(xpathCtx);
     xmlFreeDoc(doc);
     throw "error: unable to evaluate xpath expression";
@@ -55,22 +97,6 @@ xmlNodeSetPtr getNodeByXPath(htmlDocPtr doc, const xmlChar *xpathChar)
     xmlFreeDoc(doc);
     throw "error: nodes was NULL";
   }
-  return nodes;
-}
-
-int getElementByXpath(const char *xmlstr, const char *xpathStr)
-{
-  std::cout << "xmlstr : " << xmlstr << std::endl;
-  std::cout << "xpathStr : " << xpathStr << std::endl;
-
-  htmlDocPtr doc = create_HTMLDoc(xmlstr);
-  if (doc == NULL)
-  {
-    printf("error: could not parse file\n");
-    return 1;
-  }
-
-  xmlNodeSetPtr nodes = getNodeByXPath(doc, (xmlChar *)xpathStr);
 
   if (nodes->nodeMax == 0)
   {
@@ -89,21 +115,6 @@ int getElementByXpath(const char *xmlstr, const char *xpathStr)
   }
   return 0;
 }
-
-// int main(int argc, char *argv[]) {
-//   char* xmlstr = "<div><h1>Foo</h1></div>";
-//   char* xpathStr = "//h1";
-//   getElementByXpath(xmlstr, xpathStr);
-//   return 0;
-// }
-
-
-
-
-
-
-
-
 
 
 
@@ -135,9 +146,9 @@ public:
   {
     return Node(nodes->nodeTab[0]);
   }
-  Node get(int i)
+  Node* get(int i)
   {
-    return Node(nodes->nodeTab[i]);
+    return new Node(nodes->nodeTab[i]);
   }
 
 private:
@@ -149,34 +160,55 @@ class Document
 public:
   Document(string htmlChar) : htmlChar(htmlChar)
   {
-    doc = create_HTMLDoc(htmlChar.c_str());
+    htmlDocPtr doc =
+        htmlReadMemory(htmlChar.c_str(), strlen(htmlChar.c_str()), "index.html", NULL, 0);
     if (doc == NULL)
     {
-      std::cout << "error: could not parse file" << std::endl;
+      printf("error: could not parse file\n");
       throw "error: could not parse file";
-    } else {
-      std::cout << "success: could parse file" << std::endl;
-      xmlChar *xmlbuff;
-      int buffersize;
-      xmlDocDumpFormatMemory(doc, &xmlbuff, &buffersize, 1);
-      std::cout << "doc: " << xmlbuff << std::endl;
-      xmlFree(xmlbuff);
     }
   }
   ~Document() {
     xmlFreeDoc(doc);
   }
-  NodeSet getNode(string xpathChar)
+  NodeSet* getNode(string xpathChar)
   {
     std::cout << "getNode " << xpathChar << std::endl;
-    xmlNodeSetPtr nodes = getNodeByXPath(doc, (xmlChar*)xpathChar.c_str());
+    // xmlNodeSetPtr nodes = getNodeByXPath(doc, (xmlChar*)xpathChar.c_str());
+    xmlXPathContextPtr xpathCtx = xmlXPathNewContext(doc);
+    if (xpathCtx == NULL)
+    {
+      printf("error: unable to create new XPath context\n");
+      xmlFreeDoc(doc);
+      throw "error: unable to create new XPath context";
+    }
+
+    xmlXPathObjectPtr xpathObj = xmlXPathEvalExpression((xmlChar *)xpathChar.c_str(), xpathCtx);
+    if (xpathObj == NULL)
+    {
+      printf("error: unable to evaluate xpath expression \"%s\"\n", xpathChar);
+      xmlXPathFreeContext(xpathCtx);
+      xmlFreeDoc(doc);
+      throw "error: unable to evaluate xpath expression";
+    }
+
+    xmlNodeSetPtr nodes = xpathObj->nodesetval;
+    if (nodes == NULL)
+    {
+      printf("error: nodes was NULL\n");
+      xmlXPathFreeObject(xpathObj);
+      xmlXPathFreeContext(xpathCtx);
+      xmlFreeDoc(doc);
+      throw "error: nodes was NULL";
+    }
+
     if (nodes->nodeMax == 0)
     {
       std::cout << "error: no nodes found" << std::endl;
       // xmlFreeDoc(doc);
       // throw "error: no nodes found";
     }
-    return NodeSet(nodes);
+    return new NodeSet(nodes);
   }
 
 private:
