@@ -41,9 +41,8 @@ public:
   NodeSet(xmlNodeSetPtr nodes) : nodes(nodes) {}
   ~NodeSet() {
   }
-  int getLength() {
-    return nodes->nodeMax;
-  }
+  int getLength() const { return nodes->nodeNr; }
+
   Node* get(int i)
   {
     return new Node(nodes->nodeTab[i]);
@@ -143,7 +142,8 @@ EMSCRIPTEN_BINDINGS(LibXMLWasm)
       .function("getContent", &Node::getContent, emscripten::allow_raw_pointers())
       .function("toString", &Node::toString, emscripten::allow_raw_pointers());
   class_<NodeSet>("NodeSet")
-      .function("getLength", &NodeSet::getLength, emscripten::allow_raw_pointers())
+      .property("length", &NodeSet::getLength)
+      // .function("getLength", &NodeSet::getLength, emscripten::allow_raw_pointers())
       .function("get", &NodeSet::get, emscripten::allow_raw_pointers())
       .function("forEach", &NodeSet::forEach, emscripten::allow_raw_pointers())
       .function("map", &NodeSet::map, emscripten::allow_raw_pointers());

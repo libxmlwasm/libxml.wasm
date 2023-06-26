@@ -20,7 +20,7 @@ const xpath = "//body/div/*"
 
 const doc = lxml.parseHTML(htmlStr)
 const nodeSet = doc.getNode(xpath)
-console.log("length :", nodeSet.getLength())
+console.log("length :", nodeSet.length)
 nodeSet.forEach((node, i) => {
   console.log("node :", i, node.toString())
 })
