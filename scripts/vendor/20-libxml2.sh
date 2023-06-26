@@ -24,6 +24,10 @@ emcmake cmake -S "$DIRNAME" -B "$DIRNAME/build" -GNinja -DCMAKE_INSTALL_PREFIX=$
   -DLIBXML2_WITH_XPTR_LOCS=ON \
   -DLIBXML2_WITH_PYTHON=OFF \
   -DLIBXML2_WITH_LZMA=OFF \
+  -DLIBXML2_WITH_ICONV=ON \
+  -DIconv_IS_BUILT_IN=OFF \
+  -DIconv_LIBRARY="$PREFIX/lib/libiconv.a" \
+  -DIconv_INCLUDE_DIR="$PREFIX/include" \
   -DZLIB_LIBRARY="$PREFIX/lib/libz.a" \
   -DZLIB_INCLUDE_DIR="$PREFIX/include"
 emmake cmake --build "$DIRNAME/build" -j$(nproc)

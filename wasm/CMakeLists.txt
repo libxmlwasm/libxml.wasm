@@ -12,18 +12,18 @@ set(
   ${CMAKE_FIND_ROOT_PATH}
 )
 
+set(Iconv_IS_BUILT_IN OFF)
+find_package(Iconv REQUIRED)
+find_package(ZLIB REQUIRED)
 find_package(LibXml2 REQUIRED)
 
-# include_directories(${LIBXML2_INCLUDE_DIR})
-# link_libraries(${LIBXML2_LIBRARIES})
 add_executable(LibXML_WASM
-  # "original.cc"
-  "xmlXpath.cc"
   "xpathBind.cc"
 )
 target_include_directories(LibXML_WASM PUBLIC ${LIBXML2_INCLUDE_DIR})
 target_link_libraries(LibXML_WASM
-  ${LIBXML2_LIBRARIES}
+  LibXml2::LibXml2
+  Iconv::Iconv
   ${CMAKE_CURRENT_SOURCE_DIR}/../prefix/lib/libz.a
 )
 
@@ -55,3 +55,11 @@ install(
   FILES "${LibXML_WASM_BINARY_DIR}/LibXML_WASM.wasm"
   DESTINATION "${CMAKE_INSTALL_PREFIX}"
 )
+
+
+# get_cmake_property(_variableNames VARIABLES)
+# list(SORT _variableNames)
+
+# foreach(_variableName ${_variableNames})
+#   message(STATUS "${_variableName}=${${_variableName}}")
+# endforeach()
