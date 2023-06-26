@@ -16,13 +16,13 @@ const htmlStr = `
 </body>
 </html>
 `
-const xpath = "//body/h1"
+const xpath = "//body/div/*"
 
-// lxml.getElementByXpath("<div><h1>Foo</h1></div>", "//h1")
-
-const doc = lxml.parseHTML("<div><h1>Foo</h1></div>")
-// const nodeSet = doc.getNode("//h1")
-// console.log("length :", nodeSet.getLength())
-
-
-doc.getElementByXpath("//h1")
+const doc = lxml.parseHTML(htmlStr)
+const nodeSet = doc.getNode(xpath)
+console.log("length :", nodeSet.getLength())
+nodeSet.forEach((node, i) => {
+  console.log("node :", i, node.toString())
+})
+// const node = nodeSet.get(0)
+// console.log(node, node.toString())
