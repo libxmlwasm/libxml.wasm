@@ -1,19 +1,19 @@
 // #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <vector>
 #include <libxml/HTMLparser.h>
 #include <libxml/xmlreader.h>
 #include <libxml/xpath.h>
 #include <emscripten/bind.h>
 
-using namespace std;
 using namespace emscripten;
+using namespace std;
 
 class Node {
 public:
   Node(xmlNodePtr node) : node(node) {}
-  ~Node() {
-  }
+  ~Node() { }
   string getContent() {
     xmlChar *content = xmlNodeGetContent(node);
     string contentStr((char *)content);
@@ -23,7 +23,6 @@ public:
 
   string toString()
   {
-    // show node as html string
     xmlBufferPtr buf = xmlBufferCreate();
     xmlNodeDump(buf, node->doc, node, 0, 1);
     string nodeStr((char *)buf->content);
@@ -35,56 +34,12 @@ private:
   xmlNodePtr node;
 };
 
-class NodeSet
-{
-public:
-  NodeSet(xmlNodeSetPtr nodes) : nodes(nodes) {}
-  ~NodeSet() {
-  }
-  int getLength() const { return nodes->nodeNr; }
-
-  Node* get(int i)
-  {
-    return new Node(nodes->nodeTab[i]);
-  }
-
-  void forEach(emscripten::val callback)
-  {
-    for (int i = 0; i < nodes->nodeNr; i++)
-    {
-      xmlNodePtr node = nodes->nodeTab[i];
-      xmlChar *content = xmlNodeGetContent(node);
-      string contentStr((char *)content);
-      xmlFree(content);
-      callback(contentStr, i);
-    }
-  }
-
-  emscripten::val map(emscripten::val callback)
-  {
-    emscripten::val result = emscripten::val::array();
-    for (int i = 0; i < nodes->nodeNr; i++)
-    {
-      xmlNodePtr node = nodes->nodeTab[i];
-      xmlChar *content = xmlNodeGetContent(node);
-      string contentStr((char *)content);
-      xmlFree(content);
-      result.call<void>("push", callback(contentStr, i));
-    }
-    return result;
-  }
-
-private:
-  xmlNodeSetPtr nodes;
-};
-
 class Document
 {
 public:
   Document(string htmlChar) : htmlChar(htmlChar)
   {
-    doc =
-        htmlReadMemory(htmlChar.c_str(), strlen(htmlChar.c_str()), "index.html", NULL, 0);
+    doc = htmlReadMemory(htmlChar.c_str(), strlen(htmlChar.c_str()), "index.html", NULL, 0);
     if (doc == NULL)
     {
       throw "error: could not parse file";
@@ -94,7 +49,8 @@ public:
     xmlFreeDoc(doc);
   }
 
-  NodeSet* getNode(string xpathChar)
+  // NodeSet* getNode(string xpathChar)
+  emscripten::val getNode(string xpathChar)
   {
     xmlXPathContextPtr xpathCtx = xmlXPathNewContext(doc);
     if (xpathCtx == NULL)
@@ -124,7 +80,18 @@ public:
     {
       std::cerr << "error: no nodes found" << std::endl;
     }
-    return new NodeSet(nodes);
+
+    std::vector<Node *> nodeVec;
+    Node* nodeC;
+    xmlNodePtr nodePtr;
+    for (int i = 0; i < nodes->nodeNr; i++)
+    {
+      nodePtr = nodes->nodeTab[i];
+      nodeC = new Node(nodePtr);
+      nodeVec.push_back(nodeC);
+    }
+    emscripten::val result = emscripten::val::array(nodeVec.begin(), nodeVec.end());
+    return result;
   }
 
 private:
@@ -141,12 +108,6 @@ EMSCRIPTEN_BINDINGS(LibXMLWasm)
   class_<Node>("Node")
       .function("getContent", &Node::getContent, emscripten::allow_raw_pointers())
       .function("toString", &Node::toString, emscripten::allow_raw_pointers());
-  class_<NodeSet>("NodeSet")
-      .property("length", &NodeSet::getLength)
-      // .function("getLength", &NodeSet::getLength, emscripten::allow_raw_pointers())
-      .function("get", &NodeSet::get, emscripten::allow_raw_pointers())
-      .function("forEach", &NodeSet::forEach, emscripten::allow_raw_pointers())
-      .function("map", &NodeSet::map, emscripten::allow_raw_pointers());
   class_<Document>("Document")
       .constructor<std::string>()
       .function("getNode", &Document::getNode, emscripten::allow_raw_pointers());

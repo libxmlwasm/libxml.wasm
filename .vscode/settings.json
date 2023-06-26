@@ -51,6 +51,7 @@
     "xtree": "cpp",
     "xutility": "cpp",
     "atomic": "cpp",
-    "cwctype": "cpp"
+    "cwctype": "cpp",
+    "__tuple": "cpp"
   }
 }

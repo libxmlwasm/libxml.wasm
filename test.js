@@ -1,4 +1,4 @@
-// const lxml = require('wasm-install');
+//@ts-check
 import libxml_wasm from "./wasm-install/LibXML_WASM.js"
 
 const lxml = await libxml_wasm()
@@ -19,10 +19,9 @@ const htmlStr = `
 const xpath = "//body/div/*"
 
 const doc = lxml.parseHTML(htmlStr)
+/** @type {Array<any>} */
 const nodeSet = doc.getNode(xpath)
-console.log("length :", nodeSet.length)
+console.log(nodeSet)
 nodeSet.forEach((node, i) => {
-  console.log("node :", i, node.toString())
+  console.log("node :", i, node.getContent())
 })
-// const node = nodeSet.get(0)
-// console.log(node, node.toString())
