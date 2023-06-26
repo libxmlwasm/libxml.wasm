@@ -87,19 +87,19 @@ public:
       std::cerr << "error: no nodes found" << std::endl;
     }
 
-    std::vector<Node*> nodeVec;
-    Node *nodeC;
+    // std::vector<Node*> nodeVec;
+    emscripten::val result = emscripten::val::array();
     xmlNodePtr nodePtr;
+    Node *nodeC;
 
     cout << "loop start" << endl;
     for (int i = 0; i < nodes->nodeNr; i++)
     {
       nodePtr = nodes->nodeTab[i];
       nodeC = new Node(nodePtr);
-      nodeVec.push_back(nodeC);
+      result.call<void>("push", emscripten::val(nodeC));
     }
     cout << "loop end" << endl;
-    emscripten::val result = emscripten::val::array(nodeVec.begin(), nodeVec.end());
     cout << "result!" << endl;
     return result;
   }
