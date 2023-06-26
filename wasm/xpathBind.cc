@@ -13,13 +13,15 @@ using namespace std;
 class Node
 {
 public:
-  Node(xmlNodePtr node) : node(node) {
-    cout << "Node created" << endl;
+  Node(xmlNodePtr node) : node(node)
+  {
+    // cout << "Node constructor" << endl;
   }
-  ~Node() {
-    cout << "Node deleted" << endl;
+  ~Node()
+  {
+    // cout << "Node destructor" << endl;
   }
-  string getContent()
+  string getContent() const
   {
     xmlChar *content = xmlNodeGetContent(node);
     string contentStr((char *)content);
@@ -27,13 +29,32 @@ public:
     return contentStr;
   }
 
-  string toString()
+  string getName() const
+  {
+    return string((char *)node->name);
+  }
+
+  string toString() const
   {
     xmlBufferPtr buf = xmlBufferCreate();
     xmlNodeDump(buf, node->doc, node, 0, 1);
     string nodeStr((char *)buf->content);
     xmlBufferFree(buf);
     return nodeStr;
+  }
+
+  emscripten::val getAttr() const
+  {
+    xmlAttr *attr = node->properties;
+    emscripten::val result = emscripten::val::object();
+    while (attr)
+    {
+      string key((char *)attr->name);
+      string value((char *)attr->children->content);
+      result.set(key, value);
+      attr = attr->next;
+    }
+    return result;
   }
 
 private:
@@ -87,20 +108,16 @@ public:
       std::cerr << "error: no nodes found" << std::endl;
     }
 
-    // std::vector<Node*> nodeVec;
     emscripten::val result = emscripten::val::array();
     xmlNodePtr nodePtr;
     Node *nodeC;
 
-    cout << "loop start" << endl;
     for (int i = 0; i < nodes->nodeNr; i++)
     {
       nodePtr = nodes->nodeTab[i];
       nodeC = new Node(nodePtr);
       result.call<void>("push", emscripten::val(nodeC));
     }
-    cout << "loop end" << endl;
-    cout << "result!" << endl;
     return result;
   }
 
@@ -117,7 +134,10 @@ Document *parseHTML(string docStr)
 EMSCRIPTEN_BINDINGS(LibXMLWasm)
 {
   class_<Node>("Node")
-      .function("getContent", &Node::getContent, emscripten::allow_raw_pointers())
+      // .function("getContent", &Node::getContent, emscripten::allow_raw_pointers())
+      .property("content", &Node::getContent)
+      .property("name", &Node::getName)
+      .property("attr", &Node::getAttr)
       .function("toString", &Node::toString, emscripten::allow_raw_pointers());
   class_<Document>("Document")
       .constructor<std::string>()
