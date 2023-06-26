@@ -10,11 +10,17 @@
 using namespace emscripten;
 using namespace std;
 
-class Node {
+class Node
+{
 public:
-  Node(xmlNodePtr node) : node(node) {}
-  ~Node() { }
-  string getContent() {
+  Node(xmlNodePtr node) : node(node) {
+    cout << "Node created" << endl;
+  }
+  ~Node() {
+    cout << "Node deleted" << endl;
+  }
+  string getContent()
+  {
     xmlChar *content = xmlNodeGetContent(node);
     string contentStr((char *)content);
     xmlFree(content);
@@ -45,11 +51,11 @@ public:
       throw "error: could not parse file";
     }
   }
-  ~Document() {
+  ~Document()
+  {
     xmlFreeDoc(doc);
   }
 
-  // NodeSet* getNode(string xpathChar)
   emscripten::val getNode(string xpathChar)
   {
     xmlXPathContextPtr xpathCtx = xmlXPathNewContext(doc);
@@ -81,16 +87,20 @@ public:
       std::cerr << "error: no nodes found" << std::endl;
     }
 
-    std::vector<Node *> nodeVec;
-    Node* nodeC;
+    std::vector<Node*> nodeVec;
+    Node *nodeC;
     xmlNodePtr nodePtr;
+
+    cout << "loop start" << endl;
     for (int i = 0; i < nodes->nodeNr; i++)
     {
       nodePtr = nodes->nodeTab[i];
       nodeC = new Node(nodePtr);
       nodeVec.push_back(nodeC);
     }
+    cout << "loop end" << endl;
     emscripten::val result = emscripten::val::array(nodeVec.begin(), nodeVec.end());
+    cout << "result!" << endl;
     return result;
   }
 
@@ -99,7 +109,8 @@ private:
   string htmlChar;
 };
 
-Document* parseHTML(string docStr) {
+Document *parseHTML(string docStr)
+{
   return new Document(docStr);
 }
 
