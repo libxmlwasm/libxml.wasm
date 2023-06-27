@@ -26,7 +26,7 @@ jobs:
       id: meta
       with:
         images: |
-          pycabbage/libxml.wasm
+          libxml-builder
         tags: |
           type=ref,event=branch
           type=ref,event=pr
@@ -36,8 +36,10 @@ jobs:
     - name: Prepare containers
       uses: docker/build-push-action@v4
       with:
-        pull: true
-        push: true
+        # pull: true
+        # push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         load: true
