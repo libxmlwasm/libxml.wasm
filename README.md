@@ -10,4 +10,5 @@ docker kill lxml
 
 # Building
 docker run --name lxml --rm -d -v "$(pwd)/cache:/tmp/cache" -v "$(pwd)/scripts:/scripts" -v "$(pwd)/.:/home/emscripten/src" -u emscripten -e PREFIX=/home/emscripten/src/prefix lxml:latest /scripts/ci.sh
+# ↑No
 ```

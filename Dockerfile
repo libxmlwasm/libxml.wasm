@@ -13,5 +13,12 @@ RUN \
   rm /tmp/ninja-linux.zip
 
 USER emscripten
-WORKDIR /home/emscripten
+COPY --chown=emscripten . /home/emscripten/src
+WORKDIR /home/emscripten/src
+ARG PREFIX=/home/emscripten/src/prefix
+
 RUN embuilder build icu
+RUN scripts/vendor/00-zlib.sh
+RUN scripts/vendor/10-libiconv.sh
+RUN scripts/vendor/20-libxml2.sh
+RUN scripts/wasm.sh
