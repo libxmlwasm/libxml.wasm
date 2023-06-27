@@ -37,7 +37,10 @@ jobs:
     - name: Cache source archive
       uses: actions/cache@v3
       with:
-        path: cache/
+        path: |
+          cache
+          prefix
+          wasm-build
         key: archive-${{ github.sha }}
         restore-keys: |
           archive-
