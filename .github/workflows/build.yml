@@ -50,7 +50,10 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         load: true
-    - name: Test
+    - name: Build
       run: |
-        # run built container
-        echo ${DOCKER_METADATA_OUTPUT_TAGS[0]}
+        docker run --name builder --rm -it -v "$(pwd)/cache:/tmp/cache" -v "$(pwd)/scripts:/scripts" -v "$(pwd)/.:/home/emscripten/src" -u emscripten -e PREFIX=/home/emscripten/src/prefix ghcr.io/${{ github.repository }}/builder:latest /scripts/ci.sh
+    - uses: actions/upload-artifact@v3
+      with:
+        name: wasm
+        path: wasm-install
