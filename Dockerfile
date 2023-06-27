@@ -18,6 +18,7 @@ WORKDIR /home/emscripten/src
 ARG PREFIX=/home/emscripten/src/prefix
 
 RUN embuilder build icu
+RUN mkdir -p /tmp/cache
 RUN scripts/vendor/00-zlib.sh
 RUN scripts/vendor/10-libiconv.sh
 RUN scripts/vendor/20-libxml2.sh
