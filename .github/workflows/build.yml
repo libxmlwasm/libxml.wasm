@@ -26,23 +26,31 @@ jobs:
       id: meta
       with:
         images: |
-          libxml-builder
+          ghcr.io/${{ github.repository }}/builder
         tags: |
+          type=raw,value=latest
           type=ref,event=branch
           type=ref,event=pr
           type=semver,pattern={{version}}
           type=semver,pattern={{major}}.{{minor}}
           type=sha
+    - name: Cache source archive
+      uses: actions/cache@v3
+      with:
+        path: cache/
+        key: archive-${{ github.sha }}
+        restore-keys: |
+          archive-
     - name: Prepare containers
       uses: docker/build-push-action@v4
+      id: build-container
       with:
-        # pull: true
-        # push: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         load: true
-    # - name: Build
-    #   run: |
-    #     docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    - name: Test
+      run: |
+        echo image : \"${{ steps.build-container.outputs.metadata.container.image.name }}\"
+        # docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
