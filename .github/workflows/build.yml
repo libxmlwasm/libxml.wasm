@@ -56,7 +56,8 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
     - name: Build
       run: |
-        docker run --name builder --rm -v "$(pwd)/output:/tmp/output" -u emscripten ghcr.io/${{ github.repository }}/builder:latest /home/emscripten/src/scripts/copy-output.sh /home/emscripten/src /tmp/output
+        docker run --name builder --rm -v "$(pwd):/tmp/output" -u emscripten ghcr.io/${{ github.repository }}/builder:latest /home/emscripten/src/scripts/copy-output.sh /home/emscripten/src /tmp/output
+
     - uses: actions/upload-artifact@v3
       with:
         name: wasm
