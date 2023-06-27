@@ -44,19 +44,19 @@ jobs:
         key: archive-${{ github.sha }}
         restore-keys: |
           archive-
-    - name: Prepare containers
+    - name: Build
       uses: docker/build-push-action@v4
-      id: build-container
       with:
+        push: true
+        pull: true
+        # load: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-        load: true
     - name: Build
       run: |
-        # docker run --name builder --rm -v "$(pwd)/cache:/tmp/cache" -v "$(pwd)/scripts:/scripts" -v "$(pwd)/.:/home/emscripten/src" -u emscripten -e PREFIX=/home/emscripten/src/prefix ghcr.io/${{ github.repository }}/builder:latest /scripts/ci.sh
-        docker run --name builder --rm -v "$(pwd)/cache:/tmp/cache" -v "$(pwd)/output:/tmp/output" -u emscripten ghcr.io/${{ github.repository }}/builder:latest /bin/bash -c "cp -r /home/emscripten/src/wasm-install /tmp/output; cp -r cache /tmp/cache"
+        docker run --name builder --rm -v "$(pwd)/output:/tmp/output" -u emscripten ghcr.io/${{ github.repository }}/builder:latest /home/emscripten/src/scripts/copy-output.sh /home/emscripten/src /tmp/output
     - uses: actions/upload-artifact@v3
       with:
         name: wasm
