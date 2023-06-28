@@ -49,15 +49,13 @@ jobs:
       with:
         push: true
         pull: true
-        # load: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-    - name: Build
+    - name: Copy files from container
       run: |
-        docker run --name builder --rm -v "$(pwd):/tmp/output" -u emscripten ghcr.io/${{ github.repository }}/builder:latest /home/emscripten/src/scripts/copy-output.sh /home/emscripten/src /tmp/output
-
+        # docker run --name builder --rm -u emscripten -v "$(pwd):/src" -w /src ghcr.io/${{ github.repository }}/builder:latest /src/scripts/ci.sh
     - uses: actions/upload-artifact@v3
       with:
         name: wasm

@@ -3,7 +3,8 @@
 VERSION="1.17"
 DIRNAME="libiconv-${VERSION}"
 FILENAME="${DIRNAME}.tar.gz"
-FILEPATH="/tmp/cache/${FILENAME}"
+TMPDIR=${TMPDIR:-$(realpath "./cache")}
+FILEPATH="${TMPDIR}/${FILENAME}"
 URL="https://ftp.gnu.org/gnu/libiconv/${FILENAME}"
 PREFIX=${PREFIX:-$(realpath "./prefix")}
 

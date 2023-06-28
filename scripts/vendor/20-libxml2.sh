@@ -3,7 +3,8 @@
 VERSION="2.11.4"
 DIRNAME="libxml2-${VERSION}"
 FILENAME="${DIRNAME}.tar.xz"
-FILEPATH="/tmp/cache/${FILENAME}"
+TMPDIR=${TMPDIR:-$(realpath "./cache")}
+FILEPATH="${TMPDIR}/${FILENAME}"
 URL="https://download.gnome.org/sources/libxml2/2.11/${FILENAME}"
 PREFIX=${PREFIX:-$(realpath "./prefix")}
 

@@ -14,8 +14,6 @@ set(
 
 find_package(LibXml2 REQUIRED)
 
-# include_directories(${LIBXML2_INCLUDE_DIR})
-# link_libraries(${LIBXML2_LIBRARIES})
 add_executable(LibXML_EMBIND_TEST
   "emBindTest.cc"
 )
@@ -41,6 +39,9 @@ if(EMSCRIPTEN)
     -s EXPORT_ALL \
     --no-entry \
     --bind \
+    -O3 \
+    -flto \
+    --closure 1 \
     "
   )
 endif()

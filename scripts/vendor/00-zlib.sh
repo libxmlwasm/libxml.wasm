@@ -3,7 +3,8 @@
 VERSION="1.2.13"
 DIRNAME="zlib-${VERSION}"
 FILENAME="${DIRNAME}.tar.gz"
-FILEPATH="/tmp/cache/${FILENAME}"
+TMPDIR=${TMPDIR:-$(realpath "./cache")}
+FILEPATH="${TMPDIR}/${FILENAME}"
 URL="https://zlib.net/fossils/${FILENAME}"
 PREFIX=${PREFIX:-$(realpath "./prefix")}
 
