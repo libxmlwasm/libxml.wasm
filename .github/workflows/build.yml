@@ -57,7 +57,7 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
     - name: Build
       run: |
-        docker run --name builder --rm -u emscripten -v "$(pwd):/src" -w /src ghcr.io/${{ github.repository }}/builder:latest /src/scripts/ci.sh
+        docker run --name builder --rm -v "$(pwd):/src" -w /src ghcr.io/${{ github.repository }}/builder:latest /src/scripts/ci.sh
     - name: Create package tarball
       run: |
         corepack yarn install
