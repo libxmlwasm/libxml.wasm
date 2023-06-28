@@ -12,7 +12,7 @@ PREFIX=${PREFIX:-$(realpath "./prefix")}
 
 if [ ! -d "$DIRPATH" ]; then
   if [ ! -f "$FILEPATH" ]; then
-    mkdir -p "$TMPDIR"
+    mkdir -p $(dirname "$FILEPATH")
     curl -kLo "$FILEPATH" "$URL"
   else
     echo "File $FILEPATH already exists."
