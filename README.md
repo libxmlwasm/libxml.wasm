@@ -1,4 +1,4 @@
-# libxml_wasm
+# libxml.wasm
 
 ## Building
 
