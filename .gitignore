@@ -3,6 +3,8 @@ cache/*
 prefix/
 wasm-*/
 !wasm-test/
+src/wasm/*.js
+src/wasm/*.wasm
 
 # Logs
 logs

@@ -54,7 +54,7 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
     - name: Copy files from container
       run: |
-        docker run --name builder --rm -u emscripten -v "$(pwd):/src" -w /src ghcr.io/${{ github.repository }}/builder:latest /src/scripts/ci.sh
+        docker run --name builder --rm -u emscripten -v "$(pwd):/src" -w /src -e INSTALLPATH=/src/src/wasm ghcr.io/${{ github.repository }}/builder:latest /src/scripts/ci.sh
     - uses: actions/upload-artifact@v3
       with:
         name: wasm-install

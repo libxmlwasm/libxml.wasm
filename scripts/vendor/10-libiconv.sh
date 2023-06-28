@@ -4,24 +4,26 @@ VERSION="1.17"
 DIRNAME="libiconv-${VERSION}"
 FILENAME="${DIRNAME}.tar.gz"
 TMPDIR=${TMPDIR:-$(realpath "./cache")}
+EXTRACT_BASE=${EXTRACT_BASE:-$(realpath "$TMPDIR/build")}
+DIRPATH="${EXTRACT_BASE}/${DIRNAME}"
 FILEPATH="${TMPDIR}/${FILENAME}"
 URL="https://ftp.gnu.org/gnu/libiconv/${FILENAME}"
 PREFIX=${PREFIX:-$(realpath "./prefix")}
 
-if [ ! -d "$DIRNAME" ]; then
+if [ ! -d "$DIRPATH" ]; then
   if [ ! -f "$FILEPATH" ]; then
     curl -kLo "$FILEPATH" "$URL"
   else
     echo "File $FILEPATH already exists."
   fi
-
-  tar axf "$FILEPATH"
+  mkdir -p "$EXTRACT_BASE"
+  tar axf "$FILEPATH" -C "$EXTRACT_BASE"
 else
-  echo "Directory $DIRNAME already exists."
+  echo "Directory $DIRPATH already exists."
 fi
 
 (
-  cd "$DIRNAME"
+  cd "$DIRPATH"
   emconfigure ./configure --prefix=$PREFIX --host=wasm32-unknown-emscripten --enable-extra-encodings
   emmake make -j$(nproc)
   make install
