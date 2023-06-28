@@ -15,7 +15,7 @@ echo "Building $DIRNAME ..."
 if [ ! -d "$DIRPATH" ]; then
   if [ ! -f "$FILEPATH" ]; then
     mkdir -p $(dirname "$FILEPATH")
-    curl -kLo "$FILEPATH" "$URL"
+    curl -kLo "$FILEPATH" "$URL" || sudo curl -kLo "$FILEPATH" "$URL"
   else
     echo "File $FILEPATH already exists."
   fi
