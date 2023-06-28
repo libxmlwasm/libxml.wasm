@@ -47,7 +47,7 @@ jobs:
         key: archive-${{ github.sha }}
         restore-keys: |
           archive-
-    - name: Build
+    - name: Prepare container
       uses: docker/build-push-action@v4
       with:
         load: true
@@ -55,7 +55,7 @@ jobs:
         cache-to: type=gha,mode=max
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-    - name: Copy files from container
+    - name: Build
       run: |
         docker run --name builder --rm -u emscripten -v "$(pwd):/src" -w /src ghcr.io/${{ github.repository }}/builder:latest /src/scripts/ci.sh
     - name: Create package tarball
