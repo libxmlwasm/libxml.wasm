@@ -15,11 +15,9 @@ class Node
 public:
   Node(xmlNodePtr node) : node(node)
   {
-    // cout << "Node constructor" << endl;
   }
   ~Node()
   {
-    // cout << "Node destructor" << endl;
   }
   string getContent() const
   {
@@ -55,6 +53,11 @@ public:
       attr = attr->next;
     }
     return result;
+  }
+
+  Node *getParent() const
+  {
+    return new Node(node->parent);
   }
 
 private:
@@ -138,6 +141,7 @@ EMSCRIPTEN_BINDINGS(LibXMLWasm)
       .property("content", &Node::getContent)
       .property("name", &Node::getName)
       .property("attr", &Node::getAttr)
+      .property("parent", &Node::getParent)
       .function("toString", &Node::toString, emscripten::allow_raw_pointers());
   class_<Document>("Document")
       .constructor<std::string>()

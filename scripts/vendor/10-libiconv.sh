@@ -24,7 +24,9 @@ fi
 
 (
   cd "$DIRPATH"
-  emconfigure ./configure --prefix=$PREFIX --host=wasm32-unknown-emscripten --enable-extra-encodings
+  if [ ! -f "Makefile" ]; then
+    emconfigure ./configure --prefix=$PREFIX --host=wasm32-unknown-emscripten --enable-extra-encodings
+  fi
   emmake make -j$(nproc)
   make install
 )

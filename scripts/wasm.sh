@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 BASEDIR=${BASEDIR:-$(realpath .)}
-INSTALLPATH=${INSTALLPATH:-$(realpath ${BASEDIR}/wasm-install)}
+INSTALLPATH=${INSTALLPATH:-$(realpath ${BASEDIR}/dist)}
 
 if [ "$1" = "clean" ]; then
   rm -fr ${BASEDIR}/wasm-build ${INSTALLPATH}
