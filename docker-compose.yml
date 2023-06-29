@@ -1,0 +1,12 @@
+version: '3'
+services:
+  builder:
+    user: $UID:$GID
+    build:
+      args:
+        UID: $UID
+        GID: $GID
+        USERNAME: $USERNAME
+    volumes:
+      - .:/src
+    command: bash /src/scripts/ci.sh
