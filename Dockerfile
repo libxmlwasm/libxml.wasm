@@ -9,3 +9,8 @@ RUN echo "emscripten ALL=NOPASSWD: ALL" >> /etc/sudoers.d/emscripten && \
 
 USER ${USERNAME}
 WORKDIR /home/${USERNAME}
+
+ENV UID ${UID}
+ENV GID ${GID}
+ENV USERNAME ${USERNAME}
+RUN echo [ENV] UID: ${UID}, GID: ${GID}, USERNAME: ${USERNAME}
