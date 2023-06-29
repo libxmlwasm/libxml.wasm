@@ -7,5 +7,5 @@ RUN echo "emscripten ALL=NOPASSWD: ALL" >> /etc/sudoers.d/emscripten && \
   usermod -aG sudo emscripten && \
   visudo -c
 
-# USER emscripten
-# WORKDIR /home/emscripten
+USER ${USERNAME}
+WORKDIR /home/${USERNAME}
