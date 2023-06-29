@@ -55,6 +55,10 @@ jobs:
         cache-to: type=gha,mode=max
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        build-args: |
+          UID: ${{ env.UID }}
+          GID: ${{ env.GID }}
+          USERNAME: ${{ env.USERNAME }}
     - name: Build
       run: |
         docker run --name builder --rm -v "$(pwd):/src" -w /src ghcr.io/${{ github.repository }}/builder:latest /src/scripts/ci.sh
