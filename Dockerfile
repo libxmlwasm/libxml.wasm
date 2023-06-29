@@ -3,8 +3,6 @@ ARG UID
 ARG GID
 ARG USERNAME
 
-RUN echo [ARG] UID: ${UID}, GID: ${GID}, USERNAME: ${USERNAME}
-
 RUN rm -f /etc/apt/apt.conf.d/docker-clean && \
   echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -24,4 +22,3 @@ WORKDIR /home/${USERNAME}
 ENV UID ${UID}
 ENV GID ${GID}
 ENV USERNAME ${USERNAME}
-RUN echo [ENV] UID: ${UID}, GID: ${GID}, USERNAME: ${USERNAME}

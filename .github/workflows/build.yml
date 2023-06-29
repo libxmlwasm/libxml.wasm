@@ -62,9 +62,9 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         build-args: |
-          UID: ${{ steps.userinfo.outputs.UID }}
-          GID: ${{ steps.userinfo.outputs.GID }}
-          USERNAME: ${{ steps.userinfo.outputs.USERNAME }}
+          UID=${{ steps.userinfo.outputs.UID }}
+          GID=${{ steps.userinfo.outputs.GID }}
+          USERNAME=${{ steps.userinfo.outputs.USERNAME }}
     - name: Build
       run: |
         docker run --name builder --rm -v "$(pwd):/src" -w /src ghcr.io/${{ github.repository }}/builder:latest /src/scripts/ci.sh
