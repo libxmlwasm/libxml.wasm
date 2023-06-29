@@ -47,6 +47,12 @@ jobs:
         key: archive-${{ github.sha }}
         restore-keys: |
           archive-
+    - name: Get UID, GID, Username
+      id: userinfo
+      run: |
+        echo "UID=$(id -u)" >> "$GITHUB_OUTPUT"
+        echo "GID=$(id -u)" >> "$GITHUB_OUTPUT"
+        echo "USERNAME=$(whoami)" >> "$GITHUB_OUTPUT"
     - name: Prepare container
       uses: docker/build-push-action@v4
       with:
@@ -56,9 +62,9 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         build-args: |
-          UID: ${{ env.UID }}
-          GID: ${{ env.GID }}
-          USERNAME: ${{ env.USERNAME }}
+          UID: ${{ steps.userinfo.outputs.UID }}
+          GID: ${{ steps.userinfo.outputs.GID }}
+          USERNAME: ${{ steps.userinfo.outputs.USERNAME }}
     - name: Build
       run: |
         docker run --name builder --rm -v "$(pwd):/src" -w /src ghcr.io/${{ github.repository }}/builder:latest /src/scripts/ci.sh
