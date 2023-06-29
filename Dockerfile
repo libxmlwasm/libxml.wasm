@@ -3,10 +3,7 @@ ARG UID
 ARG GID
 ARG USERNAME
 
-ENV UID ${UID}
-ENV GID ${GID}
-ENV USERNAME ${USERNAME}
-RUN echo UID: ${UID}, GID: ${GID}, USERNAME: ${USERNAME}
+RUN echo [ARG] UID: ${UID}, GID: ${GID}, USERNAME: ${USERNAME}
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean && \
   echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
@@ -23,3 +20,8 @@ RUN echo emscripten ALL=NOPASSWD: ALL > /etc/sudoers.d/${USERNAME} && \
 
 USER ${USERNAME}
 WORKDIR /home/${USERNAME}
+
+ENV UID ${UID}
+ENV GID ${GID}
+ENV USERNAME ${USERNAME}
+RUN echo [ENV] UID: ${UID}, GID: ${GID}, USERNAME: ${USERNAME}
