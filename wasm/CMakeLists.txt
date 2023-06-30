@@ -50,6 +50,7 @@ if(EMSCRIPTEN)
     -s EXPORT_ALL \
     --no-entry \
     --bind \
+    -O2 \
     "
   )
 endif()

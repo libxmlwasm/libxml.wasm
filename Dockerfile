@@ -10,3 +10,4 @@ RUN echo "emscripten ALL=NOPASSWD: ALL" >> /etc/sudoers.d/emscripten && \
 # USER ${HOST_USERNAME}
 RUN mkdir /src -p
 WORKDIR /src
+RUN embuilder build icu

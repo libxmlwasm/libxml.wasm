@@ -1,7 +1,8 @@
-// #include <cstring>
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <string>
+#include <string.h>
 #include <libxml/HTMLparser.h>
 #include <libxml/xmlreader.h>
 #include <libxml/xpath.h>
