@@ -37,4 +37,3 @@ emcmake cmake -S "$DIRPATH" -B "$DIRPATH/build" -GNinja -DCMAKE_INSTALL_PREFIX=$
   -DZLIB_INCLUDE_DIR="$PREFIX/include"
 emmake cmake --build "$DIRPATH/build" -j$(nproc)
 cmake --install "$DIRPATH/build"
-rm -fr "$DIRPATH"
