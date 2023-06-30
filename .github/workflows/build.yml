@@ -55,11 +55,11 @@ jobs:
         restore-keys: |
           archive-
     - name: Get UID, GID, Username
-      id: userinfo
       run: |
         echo "HOST_UID=$(id -u)" >> "$GITHUB_ENV"
         echo "HOST_GID=$(id -u)" >> "$GITHUB_ENV"
         echo "HOST_USERNAME=$(whoami)" >> "$GITHUB_ENV"
+        chmod 777 cache
     - uses: docker/bake-action@v3
       with:
         load: true
