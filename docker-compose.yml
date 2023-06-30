@@ -1,13 +1,7 @@
 version: '3'
 services:
   builder:
-    # user: $HOST_UID:$HOST_GID
-    build:
-      context: .
-      # args:
-      #   HOST_UID: ${HOST_UID}
-      #   HOST_GID: ${HOST_GID}
-      #   HOST_USERNAME: ${HOST_USERNAME}
+    build:  .
     volumes:
       - .:/src
     command: bash /src/scripts/ci.sh
