@@ -31,19 +31,6 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - uses: docker/metadata-action@v4
-      if: false
-      id: meta
-      with:
-        images: |
-          ghcr.io/${{ github.repository }}/builder
-        tags: |
-          type=raw,value=latest
-          type=ref,event=branch
-          type=ref,event=pr
-          type=semver,pattern={{version}}
-          type=semver,pattern={{major}}.{{minor}}
-          type=sha
     - name: Cache source archive
       uses: actions/cache@v3
       with:
@@ -54,12 +41,8 @@ jobs:
         key: archive-${{ github.sha }}
         restore-keys: |
           archive-
-    - name: Get UID, GID, Username
-      run: |
-        echo "HOST_UID=$(id -u)" >> "$GITHUB_ENV"
-        echo "HOST_GID=$(id -u)" >> "$GITHUB_ENV"
-        echo "HOST_USERNAME=$(whoami)" >> "$GITHUB_ENV"
-        chmod 777 cache
+    - name: Change cache directory permission
+      run: chmod 777 cache
     - uses: docker/bake-action@v3
       with:
         load: true
