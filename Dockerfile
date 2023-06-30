@@ -9,3 +9,4 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 
 RUN mkdir /src -p
 WORKDIR /src
+RUN embuilder build icu

@@ -3,8 +3,9 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/prefix/**",
-                "${LOCALAPPDATA}/emsdk/upstream/emscripten/system/include/**"
+                "${workspaceFolder}/prefix/include/**",
+                "${HOME}/.emsdk/upstream/emscripten/system/include/**",
+                "/usr/include/x86_64-linux-gnu/c++/11"
             ],
             "defines": [
                 "_DEBUG",
@@ -12,7 +13,7 @@
                 "_UNICODE"
             ],
             "windowsSdkVersion": "10.0.17763.0",
-            "compilerPath": "${LOCALAPPDATA}\\Local\\emsdk\\upstream\\emscripten\\emcc.bat",
+            "compilerPath": "/usr/bin/clang",
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "linux-clang-x86",

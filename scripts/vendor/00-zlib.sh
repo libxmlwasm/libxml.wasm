@@ -27,6 +27,6 @@ fi
 (
   cd "$DIRPATH"
   emconfigure ./configure --prefix=$PREFIX
-  emmake make -j$(nproc)
+  emmake make -j$(nproc) CXXFLAGS="-Wno-deprecated-non-prototype"
   make install
 )

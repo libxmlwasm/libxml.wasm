@@ -1,7 +1,8 @@
-// #include <cstring>
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <string>
+#include <string.h>
 #include <libxml/HTMLparser.h>
 #include <libxml/xmlreader.h>
 #include <libxml/xpath.h>
@@ -137,11 +138,10 @@ Document *parseHTML(string docStr)
 EMSCRIPTEN_BINDINGS(LibXMLWasm)
 {
   class_<Node>("Node")
-      // .function("getContent", &Node::getContent, emscripten::allow_raw_pointers())
       .property("content", &Node::getContent)
       .property("name", &Node::getName)
       .property("attr", &Node::getAttr)
-      .property("parent", &Node::getParent)
+      .function("getParent", &Node::getParent, emscripten::allow_raw_pointers())
       .function("toString", &Node::toString, emscripten::allow_raw_pointers());
   class_<Document>("Document")
       .constructor<std::string>()

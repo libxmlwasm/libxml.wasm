@@ -25,8 +25,8 @@ abstract class Node {
   /** Node's tag name */
   name: string;
 
-  /** Node's parent node */
-  parent: Node;
+  /** get Node's parent node */
+  getPparent(): Node;
 
   /** Node's attrs */
   attr: Record<string, string>;

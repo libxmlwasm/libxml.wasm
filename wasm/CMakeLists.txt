@@ -43,6 +43,7 @@ if(EMSCRIPTEN)
     -s EXPORT_ALL \
     --no-entry \
     --bind \
+    -O2 \
     "
   )
 endif()
@@ -52,6 +53,6 @@ install(
   DESTINATION "${CMAKE_INSTALL_PREFIX}"
 )
 install(
-  FILES "${LibXML_WASM_BINARY_DIR}/libxml.wasm"
+  FILES "${libxml_BINARY_DIR}/libxml.wasm"
   DESTINATION "${CMAKE_INSTALL_PREFIX}"
 )
