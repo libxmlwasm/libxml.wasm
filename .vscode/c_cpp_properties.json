@@ -12,7 +12,7 @@
                 "_UNICODE"
             ],
             "windowsSdkVersion": "10.0.17763.0",
-            "compilerPath": "C:\\Users\\cabbage\\AppData\\Local\\emsdk\\upstream\\emscripten\\emcc.bat",
+            "compilerPath": "${LOCALAPPDATA}\\Local\\emsdk\\upstream\\emscripten\\emcc.bat",
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "linux-clang-x86",

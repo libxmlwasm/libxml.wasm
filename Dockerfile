@@ -15,8 +15,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   apt update && \
   apt install -qqq -y --no-install-recommends autopoint po4a ninja-build
 
-RUN groupadd -g ${HOST_GID} ${HOST_USERNAME} || echo "group already exists"
-RUN useradd -u ${HOST_UID} -g $(id -Gn ${HOST_GID}) -m $(id -un ${HOST_UID}) || echo "user already exists"
+RUN (id -Gn ${HOST_GID} && echo "group already exists") || groupadd -g ${HOST_GID} ${HOST_USERNAME}
+RUN (id -un ${HOST_UID} && echo "user already exists") || useradd -u ${HOST_UID} -g $(id -Gn ${HOST_GID}) -m $(id -un ${HOST_UID})
 RUN echo $(id -un ${HOST_UID}) ALL=NOPASSWD: ALL > /etc/sudoers.d/$(id -un ${HOST_UID}) && \
   chmod 0440 /etc/sudoers.d/$(id -un ${HOST_UID}) && \
   visudo -c
