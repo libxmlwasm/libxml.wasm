@@ -4,7 +4,7 @@ VERSION="1.17"
 DIRNAME="libiconv-${VERSION}"
 FILENAME="${DIRNAME}.tar.gz"
 TMPDIR=${TMPDIR:-$(realpath "./cache")}
-mkdir $(realpath "./cache") "$TMPDIR/build"
+mkdir $(realpath "./cache") "$TMPDIR/build" -p
 EXTRACT_BASE=${EXTRACT_BASE:-$(realpath "$TMPDIR/build")}
 DIRPATH="${EXTRACT_BASE}/${DIRNAME}"
 FILEPATH="${TMPDIR}/${FILENAME}"

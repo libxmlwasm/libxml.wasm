@@ -8,4 +8,5 @@ RUN echo "emscripten ALL=NOPASSWD: ALL" >> /etc/sudoers.d/emscripten && \
   visudo -c
 
 # USER ${HOST_USERNAME}
-WORKDIR /tmp
+RUN mkdir /src -p
+WORKDIR /src
