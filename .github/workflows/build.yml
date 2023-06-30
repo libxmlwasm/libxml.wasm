@@ -57,22 +57,13 @@ jobs:
     - name: Get UID, GID, Username
       id: userinfo
       run: |
-        echo "UID=$(id -u)" >> "$GITHUB_ENV"
-        echo "GID=$(id -u)" >> "$GITHUB_ENV"
-        echo "USERNAME=$(whoami)" >> "$GITHUB_ENV"
-        chmod 777 cache
+        echo "HOST_UID=$(id -u)" >> "$GITHUB_ENV"
+        echo "HOST_GID=$(id -u)" >> "$GITHUB_ENV"
+        echo "HOST_USERNAME=$(whoami)" >> "$GITHUB_ENV"
     - uses: docker/bake-action@v3
       with:
         load: true
         files: docker-compose.yml
-        # cache-from: type=gha
-        # cache-to: type=gha,mode=max
-        # tags: ${{ steps.meta.outputs.tags }}
-        # labels: ${{ steps.meta.outputs.labels }}
-        # build-args: |
-        #   UID=${{ steps.userinfo.outputs.UID }}
-        #   GID=${{ steps.userinfo.outputs.GID }}
-        #   USERNAME=${{ steps.userinfo.outputs.USERNAME }}
     - name: Build
       run: docker compose up
     - name: Create package tarball
