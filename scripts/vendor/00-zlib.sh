@@ -4,6 +4,7 @@ VERSION="1.2.13"
 DIRNAME="zlib-${VERSION}"
 FILENAME="${DIRNAME}.tar.gz"
 TMPDIR=${TMPDIR:-$(realpath "./cache")}
+mkdir $(realpath "./cache") "$TMPDIR/build"
 EXTRACT_BASE=${EXTRACT_BASE:-$(realpath "$TMPDIR/build")}
 DIRPATH="${EXTRACT_BASE}/${DIRNAME}"
 FILEPATH="${TMPDIR}/${FILENAME}"
