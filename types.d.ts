@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/naming-convention
 async function LibXML_WASM(): Promise<LibXML>;
 
 /**
@@ -11,7 +12,7 @@ class Document {
    * Get Node by XPath
    * @param xpath XPath string
    */
-  getNode(xpath: string): Array<Node>;
+  getNode(xpath: string): Node[];
 }
 
 /**
@@ -28,9 +29,7 @@ abstract class Node {
   parent: Node;
 
   /** Node's attrs */
-  attr: {
-    [key: string]: string;
-  };
+  attr: Record<string, string>;
 
   /** Stringify Node like `<div>text</div>` */
   toString(): string;

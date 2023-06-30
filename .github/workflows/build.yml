@@ -2,6 +2,11 @@ name: Build
 
 on:
   push:
+    paths-ignore:
+      - "*.md"
+      - ".*"
+      - "*config*"
+      - "!.github"
   workflow_dispatch:
 
 concurrency:
@@ -9,6 +14,7 @@ concurrency:
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -26,6 +32,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - uses: docker/metadata-action@v4
+      if: false
       id: meta
       with:
         images: |
@@ -53,6 +60,7 @@ jobs:
         echo "UID=$(id -u)" >> "$GITHUB_ENV"
         echo "GID=$(id -u)" >> "$GITHUB_ENV"
         echo "USERNAME=$(whoami)" >> "$GITHUB_ENV"
+        chmod 777 cache
     - uses: docker/bake-action@v3
       with:
         load: true
@@ -66,12 +74,9 @@ jobs:
         #   GID=${{ steps.userinfo.outputs.GID }}
         #   USERNAME=${{ steps.userinfo.outputs.USERNAME }}
     - name: Build
-      run: |
-        docker compose up
+      run: docker compose up
     - name: Create package tarball
-      run: |
-        corepack yarn install
-        corepack yarn pack -o libxmlwasm.tgz
+      run: corepack yarn pack --install-if-needed -o libxmlwasm.tgz
     - name: Upload package tarball
       uses: actions/upload-artifact@v3
       with:

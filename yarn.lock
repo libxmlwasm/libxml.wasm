@@ -824,6 +824,7 @@ __metadata:
     "@types/jest": ^29.5.2
     "@types/node": ^20.3.1
     "@typescript-eslint/eslint-plugin": ^5.50.0
+    "@typescript-eslint/parser": ^5.60.1
     cross-env: ^7.0.3
     eslint: ^8.0.1
     eslint-config-prettier: ^8.8.0
@@ -1224,7 +1225,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.50.0":
+"@typescript-eslint/parser@npm:^5.50.0, @typescript-eslint/parser@npm:^5.60.1":
   version: 5.60.1
   resolution: "@typescript-eslint/parser@npm:5.60.1"
   dependencies:
