@@ -22,4 +22,5 @@ RUN echo $(id -un ${HOST_UID}) ALL=NOPASSWD: ALL > /etc/sudoers.d/$(id -un ${HOS
   visudo -c
 
 # USER ${HOST_USERNAME}
-WORKDIR /tmp
+RUN mkdir /src -p
+WORKDIR /src

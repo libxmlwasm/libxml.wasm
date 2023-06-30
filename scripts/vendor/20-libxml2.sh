@@ -4,7 +4,7 @@ VERSION="2.11.4"
 DIRNAME="libxml2-${VERSION}"
 FILENAME="${DIRNAME}.tar.xz"
 TMPDIR=${TMPDIR:-$(realpath "./cache")}
-mkdir $(realpath "./cache") "$TMPDIR/build"
+mkdir $(realpath "./cache") "$TMPDIR/build" -p
 EXTRACT_BASE=${EXTRACT_BASE:-$(realpath "$TMPDIR/build")}
 DIRPATH="${EXTRACT_BASE}/${DIRNAME}"
 FILEPATH="${TMPDIR}/${FILENAME}"
