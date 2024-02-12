@@ -25,9 +25,8 @@ fi
 
 (
   cd "$DIRPATH"
-  if [ ! -f "Makefile" ]; then
-    emconfigure ./configure --prefix=$PREFIX
-  fi
+  # emconfigure ./configure --prefix=$PREFIX
+  prefix=$PREFIX CC=$(which emcc) ./configure --prefix=$PREFIX
   emmake make -j$(nproc)
   make install
 )

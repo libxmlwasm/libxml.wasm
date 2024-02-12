@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  builder:
+    build: .
+    user: "emscripten"
+    volumes:
+      - .:/src
+      - embuilder-cache:/emsdk/upstream/emscripten/cache
+    working_dir: /src
+    command: /src/scripts/ci.sh
+
+volumes:
+  embuilder-cache:
