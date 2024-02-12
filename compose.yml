@@ -1,14 +1,20 @@
 version: "3"
 
+x-base-service: &base-service
+  build: .
+  user: "emscripten"
+  volumes:
+    - .:/src
+    - embuilder-cache:/emsdk/upstream/emscripten/cache
+  working_dir: /src
+
 services:
-  builder:
-    build: .
-    user: "emscripten"
-    volumes:
-      - .:/src
-      - embuilder-cache:/emsdk/upstream/emscripten/cache
-    working_dir: /src
+  ci:
+    <<: *base-service
     command: /src/scripts/ci.sh
+  wasm:
+    <<: *base-service
+    command: /src/scripts/wasm.sh
 
 volumes:
   embuilder-cache:

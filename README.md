@@ -3,7 +3,10 @@
 ## Build
 
 ```bash
-docker compose up --build builder
+# Build also libraries
+docker compose up ci
+# Build only wasm (requires libraries to be built)
+docker compose up wasm
 ```
 
 ## Build (Old)
