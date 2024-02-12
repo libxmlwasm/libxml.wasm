@@ -50,13 +50,13 @@ jobs:
     - name: Prepare container
       uses: docker/build-push-action@v5
       with:
-        load: true
+        # load: true
         cache-from: type=gha
         cache-to: type=gha,mode=max
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         push: true
-        # pull: true
+    #     pull: true
     # - name: Build
     #   run: |
     #     docker run --name builder --rm -u emscripten -v "$(pwd):/src" -w /src ghcr.io/${{ github.repository }}/builder:latest /src/scripts/ci.sh
