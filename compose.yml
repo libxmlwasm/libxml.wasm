@@ -2,6 +2,7 @@ version: "3"
 
 x-base-service: &base-service
   build: .
+  image: ghcr.io/libxmlwasm/libxml.wasm/builder:latest
   user: "emscripten"
   volumes:
     - .:/src
