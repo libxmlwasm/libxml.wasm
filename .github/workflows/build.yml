@@ -56,15 +56,16 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         push: true
-    - name: Build
-      run: |
-        docker run --name builder --rm -u emscripten -v "$(pwd):/src" -w /src ghcr.io/${{ github.repository }}/builder:latest /src/scripts/ci.sh
-    - name: Create package tarball
-      run: |
-        corepack yarn install
-        corepack yarn pack -o libxmlwasm.tgz
-    - name: Upload package tarball
-      uses: actions/upload-artifact@v4
-      with:
-        name: libxmlwasm.tgz
-        path: libxmlwasm.tgz
+        # pull: true
+    # - name: Build
+    #   run: |
+    #     docker run --name builder --rm -u emscripten -v "$(pwd):/src" -w /src ghcr.io/${{ github.repository }}/builder:latest /src/scripts/ci.sh
+    # - name: Create package tarball
+    #   run: |
+    #     corepack yarn install --immutable
+    #     corepack yarn pack -o libxmlwasm.tgz
+    # - name: Upload package tarball
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: libxmlwasm.tgz
+    #     path: libxmlwasm.tgz
