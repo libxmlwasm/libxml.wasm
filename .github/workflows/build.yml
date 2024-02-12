@@ -37,16 +37,19 @@ jobs:
           type=semver,pattern={{version}}
           type=semver,pattern={{major}}.{{minor}}
           type=sha
-    # - name: Cache source archive
-    #   uses: actions/cache@v4
-    #   with:
-    #     path: |
-    #       cache
-    #       prefix
-    #       wasm-build
-    #     key: archive-${{ github.sha }}
-    #     restore-keys: |
-    #       archive-
+    - name: Cache source archive
+      uses: actions/cache@v4
+      with:
+        path: |
+          cache
+          prefix
+          wasm-build
+        key: archive-${{ github.sha }}
+        restore-keys: |
+          archive-
+    - name: Fix permissions
+      run: |
+        sudo chmod 777 . cache
     - name: Prepare container
       uses: docker/build-push-action@v5
       with:
