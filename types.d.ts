@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 async function LibXML_WASM(): Promise<LibXML>;
 
 /**
@@ -11,7 +12,7 @@ class Document {
    * Get Node by XPath
    * @param xpath XPath string
    */
-  getNode(xpath: string): Array<Node>;
+  getNode(xpath: string): Node[];
 }
 
 /**
@@ -24,13 +25,11 @@ abstract class Node {
   /** Node's tag name */
   name: string;
 
-  /** Node's parent node */
-  parent: Node;
+  /** Get node's parent node */
+  getParent(): Node;
 
   /** Node's attrs */
-  attr: {
-    [key: string]: string;
-  };
+  attr: Record<string, string>;
 
   /** Stringify Node like `<div>text</div>` */
   toString(): string;
@@ -41,7 +40,7 @@ abstract class Node {
  */
 interface LibXML {
   Document: typeof Document;
-  Document: typeof Node;
+  Node: typeof Node;
 
   /**
    * Parse XML string to Document

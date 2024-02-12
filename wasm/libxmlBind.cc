@@ -141,7 +141,7 @@ EMSCRIPTEN_BINDINGS(LibXMLWasm)
       .property("content", &Node::getContent)
       .property("name", &Node::getName)
       .property("attr", &Node::getAttr)
-      .property("parent", &Node::getParent)
+      .function("getParent", &Node::getParent, emscripten::allow_raw_pointers())
       .function("toString", &Node::toString, emscripten::allow_raw_pointers());
   class_<Document>("Document")
       .constructor<std::string>()

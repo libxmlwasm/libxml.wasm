@@ -2,9 +2,9 @@
   "name": "@libxml/wasm",
   "version": "0.0.0",
   "packageManager": "yarn@4.1.0",
-  "private": true,
   "type": "module",
   "types": "types.d.ts",
+  "main": "dist/libxml.js",
   "module": "dist/libxml.js",
   "scripts": {
     "test": "jest"
@@ -13,11 +13,15 @@
     "dist",
     "types.d.ts"
   ],
+  "dependencies": {
+    "@libxml/wasm-internal": "link:./dist"
+  },
   "devDependencies": {
     "@swc/core": "^1.4.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.17",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",

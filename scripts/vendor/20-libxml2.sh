@@ -41,7 +41,12 @@ fi
 
 (
   cd "$DIRPATH"
-  emconfigure ./configure --host=wasm32-unknown-emscripten --prefix=$PREFIX --without-python
+  emconfigure ./configure \
+    --host=wasm32-unknown-emscripten \
+    --prefix=$PREFIX \
+    --with-ftp \
+    --with-history \
+    --without-python
   emmake make -j$(nproc)
   make install
   cd -

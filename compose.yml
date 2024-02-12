@@ -7,6 +7,8 @@ x-base-service: &base-service
     - .:/src
     - embuilder-cache:/emsdk/upstream/emscripten/cache
   working_dir: /src
+  environment:
+  - TERM=xterm-256color 
 
 services:
   ci:

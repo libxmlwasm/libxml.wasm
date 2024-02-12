@@ -865,14 +865,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@libxml/wasm-internal@link:./dist::locator=%40libxml%2Fwasm%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@libxml/wasm-internal@link:./dist::locator=%40libxml%2Fwasm%40workspace%3A."
+  languageName: node
+  linkType: soft
+
 "@libxml/wasm@workspace:.":
   version: 0.0.0-use.local
   resolution: "@libxml/wasm@workspace:."
   dependencies:
+    "@libxml/wasm-internal": "link:./dist"
     "@swc/core": "npm:^1.4.0"
     "@types/jest": "npm:^29.5.12"
     "@types/node": "npm:^20.11.17"
     "@typescript-eslint/eslint-plugin": "npm:^6.21.0"
+    "@typescript-eslint/parser": "npm:^6.21.0"
     cross-env: "npm:^7.0.3"
     eslint: "npm:^8.56.0"
     eslint-config-prettier: "npm:^9.1.0"
@@ -1299,7 +1307,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^6.4.0":
+"@typescript-eslint/parser@npm:^6.21.0, @typescript-eslint/parser@npm:^6.4.0":
   version: 6.21.0
   resolution: "@typescript-eslint/parser@npm:6.21.0"
   dependencies:

@@ -39,7 +39,6 @@ if(EMSCRIPTEN)
     -s ALLOW_MEMORY_GROWTH=1 \
     -gsource-map \
     -s MODULARIZE \
-    -s EXPORT_ES6 \
     -s EXPORT_ALL \
     --no-entry \
     --bind \
@@ -52,6 +51,6 @@ install(
   DESTINATION "${CMAKE_INSTALL_PREFIX}"
 )
 install(
-  FILES "${LibXML_WASM_BINARY_DIR}/libxml.wasm"
+  FILES "${CMAKE_BINARY_DIR}/libxml.wasm"
   DESTINATION "${CMAKE_INSTALL_PREFIX}"
 )
