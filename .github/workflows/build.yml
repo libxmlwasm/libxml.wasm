@@ -42,8 +42,6 @@ jobs:
           type=semver,pattern={{version}}
           type=semver,pattern={{major}}.{{minor}}
           type=sha
-    - name: Fix permissions
-      run: sudo chmod 777 . cache
     - name: Prepare container
       uses: docker/build-push-action@v5
       with:
@@ -62,22 +60,12 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version-file: ".nvmrc"
-    - name: Cache source archive
-      uses: actions/cache@v4
-      with:
-        path: |
-          cache
-          prefix
-          wasm-build
-        key: archive-${{ github.sha }}
-        restore-keys: |
-          archive-
     - name: Build
       run: docker compose up ci
-    - name: Test
-      run: |
-        corepack yarn install --immutable
-        corepack yarn test
+    - name: Install dependencies
+      run: corepack yarn install --immutable
+    - name: Run tests
+      run: corepack yarn test
     - name: Create package tarball
       run: corepack yarn pack -o libxmlwasm.tgz
     - name: Upload package tarball
