@@ -2,7 +2,14 @@ name: Build and Test
 
 on:
   push:
+    paths-ignore:
+      - 'README.md'
   workflow_dispatch:
+    inputs:
+      skip-build-image:
+        description: Skip building the builder image
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -11,6 +18,7 @@ jobs:
   build-image:
     name: Preapre builder image
     runs-on: ubuntu-latest
+    if: ${{ !github.event.inputs.skip-build-image }}
     permissions:
       contents: read
       packages: write
