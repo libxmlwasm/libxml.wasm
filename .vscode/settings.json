@@ -52,7 +52,8 @@
     "xutility": "cpp",
     "atomic": "cpp",
     "cwctype": "cpp",
-    "__tuple": "cpp"
+    "__tuple": "cpp",
+    "string_view": "cpp"
   },
   "search.exclude": {
     "**/.yarn": true,

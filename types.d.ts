@@ -13,6 +13,13 @@ class Document {
    * @param xpath XPath string
    */
   getNode(xpath: string): Node[];
+
+  /**
+   * Stringify Document
+   * - Known issue: returns only first node
+   * @returns XML string
+   */
+  toString(): string;
 }
 
 /**
@@ -25,11 +32,39 @@ abstract class Node {
   /** Node's tag name */
   name: string;
 
-  /** Get node's parent node */
-  getParent(): Node;
-
   /** Node's attrs */
   attr: Record<string, string>;
+
+  /** Get node's children nodes */
+  children: Node[];
+
+  /**
+   * Node's type
+   * - `XML_ELEMENT_NODE`
+   * - `XML_ATTRIBUTE_NODE`
+   * - `XML_TEXT_NODE`
+   * - `XML_CDATA_SECTION_NODE`
+   * - `XML_ENTITY_REF_NODE`
+   * - `XML_ENTITY_NODE`
+   * - `XML_PI_NODE`
+   * - `XML_COMMENT_NODE`
+   * - `XML_DOCUMENT_NODE`
+   * - `XML_DOCUMENT_TYPE_NODE`
+   * - `XML_DOCUMENT_FRAG_NODE`
+   * - `XML_NOTATION_NODE`
+   * - `XML_HTML_DOCUMENT_NODE`
+   * - `XML_DTD_NODE`
+   * - `XML_ELEMENT_DECL`
+   * - `XML_ATTRIBUTE_DECL`
+   * - `XML_ENTITY_DECL`
+   * - `XML_NAMESPACE_DECL`
+   * - `XML_XINCLUDE_START`
+   * - `XML_XINCLUDE_END`
+   */
+  type: string;
+
+  /** Get node's parent node */
+  getParent(): Node;
 
   /** Stringify Node like `<div>text</div>` */
   toString(): string;

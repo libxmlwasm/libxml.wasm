@@ -4,6 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/prefix/**",
+                "${workspaceFolder}/cache/build/**",
                 "D:/emsdk/upstream/emscripten/system/include/**"
             ],
             "defines": [

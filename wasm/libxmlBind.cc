@@ -6,6 +6,7 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xpath.h>
 #include <emscripten/bind.h>
+#include <magic_enum.hpp>
 
 using namespace emscripten;
 using namespace std;
@@ -18,7 +19,15 @@ public:
   }
   ~Node()
   {
+    xmlFreeNode(node);
   }
+
+  string getType() const
+  {
+    basic_string_view type_name = magic_enum::enum_name(node->type);
+    return string(type_name);
+  }
+
   string getContent() const
   {
     xmlChar *content = xmlNodeGetContent(node);
@@ -60,6 +69,20 @@ public:
     return new Node(node->parent);
   }
 
+  emscripten::val getChildren() const
+  {
+    xmlNodePtr child = node->children;
+    emscripten::val result = emscripten::val::array();
+    Node *nodeC;
+    while (child)
+    {
+      nodeC = new Node(child);
+      result.call<void>("push", emscripten::val(nodeC));
+      child = child->next;
+    }
+    return result;
+  }
+
 private:
   xmlNodePtr node;
 };
@@ -78,6 +101,15 @@ public:
   ~Document()
   {
     xmlFreeDoc(doc);
+  }
+
+  string toString() const
+  {
+    xmlBufferPtr buf = xmlBufferCreate();
+    xmlNodeDump(buf, doc, doc->children, 0, 1);
+    string docStr((char *)buf->content);
+    xmlBufferFree(buf);
+    return docStr;
   }
 
   emscripten::val getNode(string xpathChar)
@@ -137,14 +169,16 @@ Document *parseHTML(string docStr)
 EMSCRIPTEN_BINDINGS(LibXMLWasm)
 {
   class_<Node>("Node")
-      // .function("getContent", &Node::getContent, emscripten::allow_raw_pointers())
       .property("content", &Node::getContent)
       .property("name", &Node::getName)
       .property("attr", &Node::getAttr)
+      .property("children", &Node::getChildren)
+      .property("type", &Node::getType)
       .function("getParent", &Node::getParent, emscripten::allow_raw_pointers())
-      .function("toString", &Node::toString, emscripten::allow_raw_pointers());
+      .function("toString", &Node::toString);
   class_<Document>("Document")
       .constructor<std::string>()
+      .function("toString", &Document::toString)
       .function("getNode", &Document::getNode, emscripten::allow_raw_pointers());
   emscripten::function("parseHTML", &parseHTML, emscripten::allow_raw_pointers());
 }

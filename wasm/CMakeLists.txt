@@ -12,6 +12,13 @@ set(
   ${CMAKE_FIND_ROOT_PATH}
 )
 
+include(cmake/get_cpm.cmake)
+CPMAddPackage(
+  NAME magic_enum
+  GITHUB_REPOSITORY Neargye/magic_enum
+  GIT_TAG "v0.9.5"
+)
+
 set(Iconv_IS_BUILT_IN OFF)
 find_package(Iconv REQUIRED)
 find_package(ZLIB REQUIRED)
@@ -24,6 +31,7 @@ target_include_directories(libxml PUBLIC ${LIBXML2_INCLUDE_DIR})
 target_link_libraries(libxml
   LibXml2::LibXml2
   Iconv::Iconv
+  magic_enum::magic_enum
   ${CMAKE_CURRENT_SOURCE_DIR}/../prefix/lib/libz.a
 )
 

@@ -61,12 +61,13 @@ jobs:
         push: true
         pull: true
     - name: Build
-      run: |
-        docker compose up ci
-    - name: Create package tarball
+      run: docker compose up ci
+    - name: Test
       run: |
         corepack yarn install --immutable
-        corepack yarn pack -o libxmlwasm.tgz
+        corepack yarn test
+    - name: Create package tarball
+      run: corepack yarn pack -o libxmlwasm.tgz
     - name: Upload package tarball
       uses: actions/upload-artifact@v4
       with:

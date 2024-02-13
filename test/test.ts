@@ -1,4 +1,4 @@
-import lxmlwasm from ".."
+import init from ".."
 
 const html = `
 <!DOCTYPE html>
@@ -23,8 +23,8 @@ const xpath = [
 
 
 test("test libxml", async () => {
-  const lxml = await lxmlwasm()
-  const doc = lxml.parseHTML(html)
+  const libxml = await init()
+  const doc = libxml.parseHTML(html)
 
   const node1 = doc.getNode(xpath[0])
   expect(node1).toHaveLength(1)

@@ -13,9 +13,6 @@
     "dist",
     "types.d.ts"
   ],
-  "dependencies": {
-    "@libxml/wasm-internal": "link:./dist"
-  },
   "devDependencies": {
     "@swc/core": "^1.4.0",
     "@types/jest": "^29.5.12",
@@ -35,8 +32,5 @@
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
-  },
-  "workspaces": [
-    "./*"
-  ]
+  }
 }
