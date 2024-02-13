@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-return 0
+exit 0
 
 VERSION="v0.9.5"
 DIRNAME="magic_enum-${VERSION}"
