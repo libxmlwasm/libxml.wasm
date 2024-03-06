@@ -62,6 +62,8 @@ jobs:
         node-version-file: ".nvmrc"
     - name: Build
       run: docker compose up ci
+    - name: Check files
+      run: ls . */
     - name: Install dependencies
       run: corepack yarn install --immutable
     - name: Run tests

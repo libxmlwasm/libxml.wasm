@@ -64,5 +64,5 @@
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "cmake.sourceDirectory": "C:/Users/cabbage/code/wasm/libxml_wasm/wasm",
-  "jest.jestCommandLine": "\".yarn/releases/yarn-4.1.0.cjs\" run jest"
+  "jest.jestCommandLine": "corepack yarn run jest"
 }

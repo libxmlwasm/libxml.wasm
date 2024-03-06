@@ -5,7 +5,7 @@
 ```bash
 # Build also libraries
 docker compose up ci
-# Build only wasm (requires libraries to be built)
+# Build only bindings
 docker compose up wasm
 ```
 
@@ -24,7 +24,7 @@ const html = `
 <body>
   <div class="container">
     <h1 class="title">Hello world</h1>
-    <p>Good</p>
+    <p>Text</p>
   </div>
 </body>
 </html>

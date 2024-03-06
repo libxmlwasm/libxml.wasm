@@ -12,6 +12,15 @@
       "version": "21.6.1"
     },
 		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-azuretools.vscode-docker",
+				"ms-vscode.vscode-typescript-next",
+				"ms-vscode.cpptools-extension-pack"
+			]
+		}
 	}
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
