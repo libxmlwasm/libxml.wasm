@@ -37,6 +37,8 @@ jobs:
       - run: ls . */
 
       - name: Publish to npm
-        run: corepack yarn npm publish
+        run: |
+          corepack yarn config set npmAuthIdent "${{ secrets.NPM_USERNAME }}:${{ secrets.NPM_TOKEN }}"
+          corepack yarn npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
