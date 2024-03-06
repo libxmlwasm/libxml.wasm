@@ -3,20 +3,29 @@ name: Publish Package to npmjs
 on:
   release:
     types: [published]
-  workflow_dispatch:
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
       - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: libxmlwasm.tgz
-          path: libxmlwasm.tgz
+        run: |
+          $runid=$(gh run list -w build.yml -s success -c $GITHUB_SHA --json databaseId -q ".[0].databaseId")
+          gh run download $runid -n libxmlwasm.tgz
+      - name: Unpack artifact
+        run: |
+          tar axf libxmlwasm.tgz
+          mv package/dist .
+          rm -rf package libxmlwasm.tgz
       - run: ls . */
+
+      - name: Publish to npm
+        run: corepack yarn npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
