@@ -62,7 +62,8 @@ jobs:
         node-version-file: ".nvmrc"
     - name: Build
       run: |
-        chmod o+w cache
+        mkdir -p prefix dist wasm-build cache
+        chmod o+w prefix dist wasm-build cache
         docker compose up ci
     - name: Check files
       run: ls . */
