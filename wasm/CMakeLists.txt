@@ -51,6 +51,7 @@ if(EMSCRIPTEN)
     --no-entry \
     --bind \
     -O2 \
+    -O2 \
     "
   )
 endif()
