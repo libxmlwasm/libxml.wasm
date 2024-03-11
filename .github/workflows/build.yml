@@ -79,3 +79,35 @@ jobs:
       with:
         name: libxmlwasm.tgz
         path: libxmlwasm.tgz
+  publish_github:
+    name: Publish to GitHub Packages
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: ".nvmrc"
+    - name: Login to GitHub Packages
+      run: |
+        cat <<EOF > ~/.yarnrc.yml
+        npmScopes:
+          "libxmlwasm":
+            npmAlwaysAuth: true
+            npmRegistryServer: 'https://npm.pkg.github.com/'
+            npmPublishRegistry: 'https://npm.pkg.github.com/'
+            npmAuthToken: ${{ secrets.GITHUB_TOKEN }}
+        EOF
+        ./scriipts/jqout.sh '.name="@${{ github.actor }}/wasm"' package.json
+        ./scriipts/jqout.sh '.version+="-${{ github.ref_name }}-${{ github.sha }}"' package.json
+    - name: Download package tarball
+      uses: actions/download-artifact@v4
+      with:
+        name: libxmlwasm.tgz
+    - name: Publish package
+      run: |
+        npm publish libxmlwasm.tgz
+        npm dist-tag add libxmlwasm@${{ steps.meta.outputs.version }} latest

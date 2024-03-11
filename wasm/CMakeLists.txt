@@ -45,12 +45,13 @@ if(EMSCRIPTEN)
     -s INITIAL_MEMORY=64MB \
     -s MAXIMUM_MEMORY=4GB \
     -s ALLOW_MEMORY_GROWTH=1 \
+    -s ENVIRONMENT=web,node \
+    -s NO_DISABLE_EXCEPTION_CATCHING \
     -gsource-map \
     -s MODULARIZE \
     -s EXPORT_ALL \
     --no-entry \
     --bind \
-    -O2 \
     -O2 \
     "
   )

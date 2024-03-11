@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { writeFile } from "fs/promises"
 import init from ".."
 
 const html = `
@@ -53,4 +55,11 @@ test("test libxml", async () => {
   expect(div[0].toString()).toBe("<div class=\"container\">\n    <h1>Hello world</h1>\n    <p>Good</p>\n  </div>")
   expect(div[0].attr).toEqual({ class: "container" })
   expect(div[0].content).toBe("\n    Hello world\n    Good\n  ")
+
+  // // get body and select child
+  // const body = doc.getNode(".//body")
+  // expect(body).toHaveLength(1)
+  // const h1 = body[0].getNode(".//h1")
+  // expect(h1).toHaveLength(1)
+  // expect(h1[0].name).toBe("h1")
 })
