@@ -91,6 +91,14 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version-file: ".nvmrc"
+    - name: Download package tarball
+      uses: actions/download-artifact@v4
+      with:
+        name: libxmlwasm.tgz
+    - name: Unpack package tarball
+      run: |
+        tar axf libxmlwasm.tgz
+        mv package/* .
     - name: Login to GitHub Packages
       run: |
         cat <<EOF > ~/.yarnrc.yml
@@ -101,13 +109,15 @@ jobs:
             npmPublishRegistry: 'https://npm.pkg.github.com/'
             npmAuthToken: ${{ secrets.GITHUB_TOKEN }}
         EOF
-        ./scriipts/jqout.sh '.name="@${{ github.actor }}/wasm"' package.json
-        ./scriipts/jqout.sh '.version+="-${{ github.ref_name }}-${{ github.sha }}"' package.json
-    - name: Download package tarball
-      uses: actions/download-artifact@v4
-      with:
-        name: libxmlwasm.tgz
+        corepack yarn npm whoami --scope "${{ github.actor }}"
+    - name: Prepare package
+      id: package
+      run: |
+        ./scripts/jqout.sh '.name="@${{ github.actor }}/wasm"' package.json
+        ./scripts/jqout.sh '.version+="-${{ github.ref_name }}-${{ github.sha }}"' package.json
+        echo "name=$(jq .name)" >> $GITHUB_OUTPUT
+        echo "version=$(jq .version)" >> $GITHUB_OUTPUT
     - name: Publish package
       run: |
-        npm publish libxmlwasm.tgz
-        npm dist-tag add libxmlwasm@${{ steps.meta.outputs.version }} latest
+        corepack yarn npm tag add ${{ steps.package.outputs.name }}@${{ steps.package.outputs.version }} experimental
+        corepack yarn npm publish --access public --tag experimental

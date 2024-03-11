@@ -1,7 +1,0 @@
-version: '3'
-services:
-  builder:
-    build:  .
-    volumes:
-      - .:/src
-    command: bash /src/scripts/ci.sh

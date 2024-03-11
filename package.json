@@ -1,5 +1,4 @@
 {
-  "$schema": "https://json.schemastore.org/package.json",
   "name": "@libxml/wasm",
   "version": "0.0.0",
   "packageManager": "yarn@4.1.0",
@@ -16,7 +15,13 @@
   },
   "homepage": "https://github.com/libxmlwasm/libxml.wasm#readme",
   "license": "MIT",
-  "keywords": ["libxml", "wasm", "xml", "parser", "serializer"],
+  "keywords": [
+    "libxml",
+    "wasm",
+    "xml",
+    "parser",
+    "serializer"
+  ],
   "scripts": {
     "test": "jest"
   },
