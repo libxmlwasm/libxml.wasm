@@ -1,4 +1,4 @@
-FROM emscripten/emsdk:3.1.53
+FROM emscripten/emsdk:3.1.59
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \

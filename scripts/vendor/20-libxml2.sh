@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-VERSION="2.12.5"
+VERSION="2.12.6"
 DIRNAME="libxml2-${VERSION}"
 FILENAME="${DIRNAME}.tar.xz"
 TMPDIR=${TMPDIR:-$(realpath "./cache")}
