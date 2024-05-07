@@ -1,7 +1,7 @@
 {
   "name": "@libxml/wasm",
   "version": "0.0.0",
-  "packageManager": "yarn@4.1.0",
+  "packageManager": "pnpm@9.1.0",
   "type": "module",
   "types": "types.d.ts",
   "main": "dist/libxml.js",
@@ -23,7 +23,8 @@
     "serializer"
   ],
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "clean": "rimraf -I -g dist prefix cache/build cache/*.gz cache/*.xz wasm-build"
   },
   "files": [
     "dist",

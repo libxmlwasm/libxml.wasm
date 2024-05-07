@@ -75,11 +75,11 @@ jobs:
     # - name: Check files
     #   run: ls . */
     - name: Install dependencies
-      run: corepack yarn install --immutable
+      run: corepack pnpm install --immutable
     - name: Run tests
-      run: corepack yarn test
+      run: corepack pnpm test
     - name: Create package tarball
-      run: corepack yarn pack -o libxmlwasm.tgz
+      run: corepack pnpm pack -o libxmlwasm.tgz
     - name: Upload package tarball
       uses: actions/upload-artifact@v4
       with:
@@ -115,8 +115,8 @@ jobs:
       run: |
         ./scripts/jqout.sh '.name="@${{ github.repository_owner }}/wasm"' package.json
         ./scripts/jqout.sh '.version+="-${{ github.ref_name }}-${{ github.sha }}"' package.json
-        echo "name=$(jq .name)" >> $GITHUB_OUTPUT
-        echo "version=$(jq .version)" >> $GITHUB_OUTPUT
+        echo "name=$(jq .name package.json)" >> $GITHUB_OUTPUT
+        echo "version=$(jq .version package.json)" >> $GITHUB_OUTPUT
     - name: Publish package
       run: |
         corepack yarn npm tag add ${{ steps.package.outputs.name }}@${{ steps.package.outputs.version }} experimental
