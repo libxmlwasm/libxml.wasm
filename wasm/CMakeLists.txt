@@ -38,21 +38,16 @@ target_link_libraries(libxml
 set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
 
 if(EMSCRIPTEN)
-  # set_property(TARGET libxml PROPERTY SUFFIX ".js")
-  # set_property(TARGET libxml PROPERTY SUFFIX ".wasm")
+  set_property(TARGET libxml PROPERTY SUFFIX ".wasm")
   set_target_properties(
     libxml
     PROPERTIES LINK_FLAGS "\
     -s MAXIMUM_MEMORY=4GB \
     -s ALLOW_MEMORY_GROWTH \
     -s ENVIRONMENT=web,node \
-    -s NO_POLYFILL \
     -s STANDALONE_WASM \
     -s WASM_BIGINT \
     -gsource-map \
-    -s EVAL_CTORS \
-    -s MODULARIZE \
-    -s EXPORT_ALL \
     -s PURE_WASI \
     -s IMPORTED_MEMORY \
     --profiling \
@@ -67,11 +62,11 @@ install(
   TARGETS libxml
   DESTINATION "${CMAKE_INSTALL_PREFIX}"
 )
-install(
-  FILES "${CMAKE_BINARY_DIR}/libxml.wasm"
-  DESTINATION "${CMAKE_INSTALL_PREFIX}"
-)
-install(
-  FILES "${CMAKE_BINARY_DIR}/libxml.wasm.map"
-  DESTINATION "${CMAKE_INSTALL_PREFIX}"
-)
+# install(
+#   FILES "${CMAKE_BINARY_DIR}/libxml.wasm"
+#   DESTINATION "${CMAKE_INSTALL_PREFIX}"
+# )
+# install(
+#   FILES "${CMAKE_BINARY_DIR}/libxml.wasm.map"
+#   DESTINATION "${CMAKE_INSTALL_PREFIX}"
+# )
