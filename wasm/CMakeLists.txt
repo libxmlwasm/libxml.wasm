@@ -65,3 +65,7 @@ install(
   FILES "${CMAKE_BINARY_DIR}/libxml.wasm"
   DESTINATION "${CMAKE_INSTALL_PREFIX}"
 )
+install(
+  FILES "${CMAKE_BINARY_DIR}/libxml.wasm.map"
+  DESTINATION "${CMAKE_INSTALL_PREFIX}"
+)

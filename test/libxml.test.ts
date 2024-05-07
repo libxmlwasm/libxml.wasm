@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { writeFile } from "fs/promises"
+// import init from ".."
 import init from ".."
 
 const html = `

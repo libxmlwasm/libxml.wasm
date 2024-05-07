@@ -55,6 +55,6 @@
     "__tuple": "cpp",
     "string_view": "cpp"
   },
-  "jest.jestCommandLine": "corepack pnpm run jest",
+  "jest.jestCommandLine": "corepack pnpm run test",
   "jest.runMode": "on-demand",
 }

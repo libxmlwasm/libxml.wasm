@@ -114,4 +114,5 @@ interface LibXML {
   parseHTML: (html: string) => Document;
 }
 
-export = LibXML_WASM;
+// export = LibXML_WASM;
+export default LibXML_WASM;
