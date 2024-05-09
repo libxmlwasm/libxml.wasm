@@ -117,6 +117,7 @@ jobs:
         name: libxmlwasm.tgz
     - name: Unpack package tarball
       run: |
+        ls -lh
         tar axf libxmlwasm.tgz
         mv package/* .
     # - name: Login to GitHub Packages
