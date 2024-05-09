@@ -41,6 +41,7 @@ set(TARGET_SUFFIX)
 message(STATUS "TARGET_SUFFIX:${TARGET_SUFFIX}")
 if(EMSCRIPTEN)
   set_property(TARGET libxml PROPERTY SUFFIX "${TARGET_SUFFIX}")
+
   # set_property(TARGET libxml PROPERTY SUFFIX ".wasm")
   set_target_properties(
     libxml
@@ -51,14 +52,16 @@ if(EMSCRIPTEN)
     -s NO_POLYFILL \
     -gsource-map \
     -s MODULARIZE \
-    -s EXPORT_ALL \
+    --profile \
+    -s WASM_ASYNC_COMPILATION \
+    -s ASSERTIONS=2 \
+    -s RUNTIME_DEBUG \
+    -s EXCEPTION_DEBUG \
+    -s EMIT_PRODUCERS_SECTION \
+    -s EVAL_CTORS=1 \
     --no-entry \
     -lembind \
-    --closure 1 \
-    --llvm-lto 1 \
-    -Oz \
     --emit-tsd libxml.d.ts \
-    --pre-js ${CMAKE_CURRENT_SOURCE_DIR}/pre.js \
     "
   )
 endif()
