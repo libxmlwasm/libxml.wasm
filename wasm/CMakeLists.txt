@@ -39,6 +39,7 @@ set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
 
 set(TARGET_SUFFIX)
 message(STATUS "TARGET_SUFFIX:${TARGET_SUFFIX}")
+
 if(EMSCRIPTEN)
   set_property(TARGET libxml PROPERTY SUFFIX "${TARGET_SUFFIX}")
 
@@ -51,6 +52,8 @@ if(EMSCRIPTEN)
     -s STACK_OVERFLOW_CHECK=2 \
     -s NO_POLYFILL \
     -gsource-map \
+    -s ENVIRONMENT=web,webview,worker,node \
+    -s SINGLE_FILE \
     -s MODULARIZE \
     --profile \
     -s WASM_ASYNC_COMPILATION \
@@ -67,18 +70,19 @@ if(EMSCRIPTEN)
 endif()
 
 install(
-TARGETS libxml
-DESTINATION "${CMAKE_INSTALL_PREFIX}"
+  TARGETS libxml
+  DESTINATION "${CMAKE_INSTALL_PREFIX}"
 )
 install(
-FILES "${CMAKE_BINARY_DIR}/libxml.d.ts"
-DESTINATION "${CMAKE_INSTALL_PREFIX}"
+  FILES "${CMAKE_BINARY_DIR}/libxml.d.ts"
+  DESTINATION "${CMAKE_INSTALL_PREFIX}"
 )
-install(
-FILES "${CMAKE_BINARY_DIR}/libxml.wasm"
-DESTINATION "${CMAKE_INSTALL_PREFIX}"
-)
-install(
-FILES "${CMAKE_BINARY_DIR}/libxml.wasm.map"
-DESTINATION "${CMAKE_INSTALL_PREFIX}"
-)
+
+# install(
+# FILES "${CMAKE_BINARY_DIR}/libxml.wasm"
+# DESTINATION "${CMAKE_INSTALL_PREFIX}"
+# )
+# install(
+# FILES "${CMAKE_BINARY_DIR}/libxml.wasm.map"
+# DESTINATION "${CMAKE_INSTALL_PREFIX}"
+# )
