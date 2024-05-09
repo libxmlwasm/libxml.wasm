@@ -93,12 +93,12 @@ jobs:
     - name: Run tests
       run: corepack pnpm test
     - name: Create package tarball
-      run: corepack pnpm pack --pack-destination libxmlwasm.tgz
+      run: corepack pnpm pack
     - name: Upload package tarball
       uses: actions/upload-artifact@v4
       with:
         name: libxmlwasm.tgz
-        path: libxmlwasm.tgz
+        path: libxml-wasm-*.tgz
   publish_github:
     name: Publish to GitHub Packages
     runs-on: ubuntu-latest
@@ -117,8 +117,8 @@ jobs:
         name: libxmlwasm.tgz
     - name: Unpack package tarball
       run: |
-        ls -lh
-        tar axf libxmlwasm.tgz
+        tar axf libxml-wasm-*.tgz
+        ls -lh . package/
         mv package/* .
     # - name: Login to GitHub Packages
     #   run: |
