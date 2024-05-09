@@ -93,7 +93,7 @@ jobs:
     - name: Run tests
       run: corepack pnpm test
     - name: Create package tarball
-      run: corepack pnpm pack -o libxmlwasm.tgz
+      run: corepack pnpm pack --pack-destination libxmlwasm.tgz
     - name: Upload package tarball
       uses: actions/upload-artifact@v4
       with:
@@ -119,11 +119,11 @@ jobs:
       run: |
         tar axf libxmlwasm.tgz
         mv package/* .
-    - name: Login to GitHub Packages
-      run: |
-        corepack yarn set npmScopes.libxmlwasm.npmAuthToken ${{ secrets.GITHUB_TOKEN }}
-        cat ./.yarnrc.yml
-        corepack yarn npm whoami --scope "${{ github.repository_owner }}"
+    # - name: Login to GitHub Packages
+    #   run: |
+    #     corepack yarn set npmScopes.libxmlwasm.npmAuthToken ${{ secrets.GITHUB_TOKEN }}
+    #     cat ./.yarnrc.yml
+    #     corepack yarn npm whoami --scope "${{ github.repository_owner }}"
     - name: Prepare package
       id: package
       run: |
@@ -132,6 +132,7 @@ jobs:
         echo "name=$(jq .name package.json)" >> $GITHUB_OUTPUT
         echo "version=$(jq .version package.json)" >> $GITHUB_OUTPUT
     - name: Publish package
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        corepack yarn npm tag add ${{ steps.package.outputs.name }}@${{ steps.package.outputs.version }} experimental
-        corepack yarn npm publish --access public --tag experimental
+        corepack pnpm publish --access public --tag experimental
