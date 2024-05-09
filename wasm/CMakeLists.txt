@@ -45,15 +45,18 @@ if(EMSCRIPTEN)
     PROPERTIES LINK_FLAGS "\
     -s MAXIMUM_MEMORY=4GB \
     -s ALLOW_MEMORY_GROWTH \
+    -s STACK_OVERFLOW_CHECK=2 \
     -s NO_POLYFILL \
     -gsource-map \
     -s MODULARIZE \
     -s EXPORT_ALL \
-    --profiling \
     --no-entry \
-    --bind \
-    -O2 \
+    -lembind \
+    --closure 1 \
+    --llvm-lto 1 \
+    -Oz \
     --emit-tsd libxml.d.ts \
+    --pre-js ${CMAKE_CURRENT_SOURCE_DIR}/pre.js \
     "
   )
 endif()
