@@ -5,7 +5,7 @@
   "type": "module",
   "types": "types.d.ts",
   "main": "dist/libxml.js",
-  "module": "dist/libxml.js",
+  "module": "dist/libxml.mjs",
   "repository": {
     "type": "git",
     "url": "https://github.com/libxmlwasm/libxml.wasm"
