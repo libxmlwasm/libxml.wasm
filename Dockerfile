@@ -13,3 +13,23 @@ RUN echo "emscripten ALL=NOPASSWD: ALL" >> /etc/sudoers.d/emscripten && \
 RUN mkdir /src -p
 WORKDIR /src
 RUN embuilder build icu
+
+# Install nvm
+USER emscripten
+RUN --mount=type=bind,source=.nvmrc,target=./.nvmrc \
+  --mount=type=bind,source=package.json,target=./package.json \
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
+  NVM_DIR="$HOME/.nvm" \
+  . ~/.nvm/nvm.sh ; \
+  nvm install && \
+  nvm use && \
+  node -v && \
+  corepack prepare && \
+  SHELL=bash corepack pnpm setup
+SHELL ["/bin/bash", "-c"]
+RUN NVM_DIR="$HOME/.nvm" . ~/.nvm/nvm.sh; \
+. $HOME/.bashrc && \
+source $HOME/.bashrc && \
+  PNPM_HOME="$HOME/.local/share/pnpm" \
+  PATH="$PNPM_HOME:$PATH" \
+  corepack pnpm add -g typescript

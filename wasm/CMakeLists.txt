@@ -45,26 +45,25 @@ if(EMSCRIPTEN)
     PROPERTIES LINK_FLAGS "\
     -s MAXIMUM_MEMORY=4GB \
     -s ALLOW_MEMORY_GROWTH \
-    -s ENVIRONMENT=web,node \
     -s NO_POLYFILL \
-    -s STANDALONE_WASM \
-    -s WASM_BIGINT \
     -gsource-map \
-    -s EVAL_CTORS \
     -s MODULARIZE \
     -s EXPORT_ALL \
-    -s PURE_WASI \
-    -s IMPORTED_MEMORY \
     --profiling \
     --no-entry \
     --bind \
     -O2 \
+    --emit-tsd libxml.d.ts \
     "
   )
 endif()
 
 install(
   TARGETS libxml
+  DESTINATION "${CMAKE_INSTALL_PREFIX}"
+)
+install(
+  FILES "${CMAKE_BINARY_DIR}/libxml.d.ts"
   DESTINATION "${CMAKE_INSTALL_PREFIX}"
 )
 install(
