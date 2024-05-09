@@ -10,7 +10,7 @@ echo BASEDIR: ${BASEDIR}
 echo BUILDDIR: ${BUILDDIR}
 echo INSTALLPATH: ${INSTALLPATH}
 
-sudo chmod 777 node_modules .pnpm-store
+sudo chmod 777 . node_modules .pnpm-store
 PATH=$PATH:$HOME/.pnpm-global/bin:/src/node_modules/.bin
 GITHUB_TOKEN=_DUMMY_ corepack pnpm install
 

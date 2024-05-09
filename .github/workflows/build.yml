@@ -3,7 +3,9 @@ name: Build and Test
 on:
   push:
     paths-ignore:
-      - 'README.md'
+      - README.md
+      - LICENSE
+
   workflow_dispatch:
     inputs:
       skip-build-image:
@@ -64,6 +66,13 @@ jobs:
     needs: build-image
     steps:
     - uses: actions/checkout@v4
+    - name: Cache Primes
+      uses: actions/cache@v4
+      with:
+        path: |
+          prefix
+          cache
+        key: buildcache-${{ hashFiles('**/CMakeLists.txt') }}
     - uses: actions/setup-node@v4
       with:
         node-version-file: ".nvmrc"
