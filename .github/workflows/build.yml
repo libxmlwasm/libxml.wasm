@@ -72,7 +72,7 @@ jobs:
         path: |
           prefix
           cache
-        key: buildcache-${{ hashFiles('**/CMakeLists.txt') }}
+        key: buildcache
     - uses: actions/setup-node@v4
       with:
         node-version-file: ".nvmrc"
@@ -118,8 +118,8 @@ jobs:
     - name: Unpack package tarball
       run: |
         tar axf libxml-wasm-*.tgz
-        ls -lh . package/
         mv package/* .
+        rm -fr package
     # - name: Login to GitHub Packages
     #   run: |
     #     corepack yarn set npmScopes.libxmlwasm.npmAuthToken ${{ secrets.GITHUB_TOKEN }}
@@ -136,4 +136,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        corepack pnpm publish --access public --tag experimental
+        corepack pnpm publish --access public --tag experimental --no-git-checks
