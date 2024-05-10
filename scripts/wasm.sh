@@ -16,7 +16,7 @@ GITHUB_TOKEN=${GITHUB_TOKEN:-"_DUMMY_"} corepack pnpm install
 
 build() {
   local SUFFIX=${1:-".js"}
-  if [ "${SUFFIX}" = ".js" ]; then
+  if [ "${SUFFIX}" = ".js" -o "${SUFFIX}" = ".cjs" ]; then
     TYPE="cjs"
   elif [ "${SUFFIX}" = ".mjs" ]; then
     TYPE="esm"
@@ -35,7 +35,7 @@ build() {
   cmake --install ${BUILDDIR_TYPE}
 }
 
-build .js
+build .cjs
 build .mjs
 
 mv ${INSTALLPATH}/cjs/* "${INSTALLPATH}/"
