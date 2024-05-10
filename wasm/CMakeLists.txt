@@ -40,6 +40,12 @@ set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
 set(TARGET_SUFFIX)
 message(STATUS "TARGET_SUFFIX:${TARGET_SUFFIX}")
 
+if(${TARGET_SUFFIX} STREQUAL ".mjs")
+  set(ESM "1")
+else()
+  set(ESM "0")
+endif()
+
 if(EMSCRIPTEN)
   set_property(TARGET libxml PROPERTY SUFFIX "${TARGET_SUFFIX}")
 
@@ -49,19 +55,18 @@ if(EMSCRIPTEN)
     PROPERTIES LINK_FLAGS "\
     -s MAXIMUM_MEMORY=4GB \
     -s ALLOW_MEMORY_GROWTH \
-    -s STACK_OVERFLOW_CHECK=2 \
     -s NO_POLYFILL \
     -gsource-map \
     -s ENVIRONMENT=web,webview,worker,node \
     -s SINGLE_FILE \
     -s MODULARIZE \
+    -s EXPORT_ES6=${ESM} \
     --profile \
+    -s STACK_OVERFLOW_CHECK=2 \
     -s WASM_ASYNC_COMPILATION \
-    -s ASSERTIONS=2 \
-    -s RUNTIME_DEBUG \
-    -s EXCEPTION_DEBUG \
     -s EMIT_PRODUCERS_SECTION \
     -s EVAL_CTORS=1 \
+    -Oz \
     --no-entry \
     -lembind \
     --emit-tsd libxml.d.ts \
