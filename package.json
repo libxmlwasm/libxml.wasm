@@ -1,11 +1,19 @@
 {
-  "name": "@libxml/wasm",
-  "version": "0.0.0",
+  "name": "libxml.wasm",
+  "version": "0.0.0-experimental",
   "packageManager": "pnpm@9.1.0",
   "type": "module",
   "types": "types.d.ts",
   "main": "dist/libxml.cjs",
   "module": "dist/libxml.mjs",
+  "exports": {
+    "./cjs": "./dist/libxml.cjs",
+    "./esm": "./dist/libxml.mjs",
+    ".": {
+      "require": "./dist/libxml.cjs",
+      "imoport": "./dist/libxml.mjs"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/libxmlwasm/libxml.wasm"

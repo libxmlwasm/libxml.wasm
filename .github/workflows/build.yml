@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build and Test and Publish
 
 on:
   push:
@@ -13,9 +13,19 @@ on:
         type: boolean
         default: false
 
+  release:
+    types: [published]
+  
+  pull_request:
+    types: [opened, synchronize, reopened]
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+env:
+  GITHUB_TOKEN: "_DUMMY_"
+  NODE_AUTH_TOKEN: "_DUMMY_"
 
 jobs:
   build-image:
@@ -86,8 +96,6 @@ jobs:
         mkdir -p prefix dist wasm-build cache
         chmod o+w prefix dist wasm-build cache
         docker compose up ci --no-build
-    # - name: Check files
-    #   run: ls . */
     - name: Install dependencies
       run: corepack pnpm install --frozen-lockfile
     - name: Run tests
@@ -99,10 +107,11 @@ jobs:
       with:
         name: libxmlwasm.tgz
         path: libxml-wasm-*.tgz
-  publish_github:
-    name: Publish to GitHub Packages
+  publish:
+    name: Publish packages
     runs-on: ubuntu-latest
     needs: build
+    if: ${{ github.event_name != 'pull_request' && !startsWith(github.ref_name, 'dependabot/') }}
     permissions:
       contents: read
       packages: write
@@ -120,20 +129,27 @@ jobs:
         tar axf libxml-wasm-*.tgz
         mv package/* .
         rm -fr package
-    # - name: Login to GitHub Packages
-    #   run: |
-    #     corepack yarn set npmScopes.libxmlwasm.npmAuthToken ${{ secrets.GITHUB_TOKEN }}
-    #     cat ./.yarnrc.yml
-    #     corepack yarn npm whoami --scope "${{ github.repository_owner }}"
     - name: Prepare package
       id: package
       run: |
-        ./scripts/jqout.sh '.name="@${{ github.repository_owner }}/wasm"' package.json
-        ./scripts/jqout.sh '.version+="-${{ github.ref_name }}-${{ github.sha }}"' package.json
+        if [ ${{ github.ref_name == 'master' }} ]; then
+          echo "This is the master branch"
+          echo "tag=latest" >> $GITHUB_OUTPUT
+        else
+          echo "This is the develop branch"
+          ./scripts/jqout.sh '.version+="-${{ github.ref_name }}-${{ github.sha }}"' package.json
+          echo "tag=experimental" >> $GITHUB_OUTPUT
+        fi
         echo "name=$(jq .name package.json)" >> $GITHUB_OUTPUT
         echo "version=$(jq .version package.json)" >> $GITHUB_OUTPUT
-    - name: Publish package
+    - name: Publish package to NPM
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      run: |
+        corepack pnpm publish --access public --tag ${{ steps.package.outputs.tag }} --no-git-checks
+    - name: Publish package to GitHub Package Registry
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        corepack pnpm publish --access public --tag experimental --no-git-checks
+        ./scripts/jqout.sh '.name="@${{ github.repository_owner }}/wasm"' package.json
+        corepack pnpm publish --access public --tag ${{ steps.package.outputs.tag }} --no-git-checks
