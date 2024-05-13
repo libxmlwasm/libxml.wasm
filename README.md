@@ -1,6 +1,14 @@
 # libxml.wasm
 
-## Build
+## Installation
+
+```bash
+npm install libxml.wasm
+```
+
+Alternatively, you can install from [GitHub Package Registry](https://github.com/libxmlwasm/libxml.wasm/pkgs/npm/wasm)
+
+### (Optional) Build mnually
 
 ```bash
 # Build also libraries
@@ -12,7 +20,9 @@ docker compose up wasm
 ## Usage
 
 ```ts
-import init from "@libxml/wasm"
+import init from "libxml.wasm"
+// or "libxml.wasm/esm", "libxml.wasm/cjs"
+
 const libxml = await init()
 
 const html = `
