@@ -1,5 +1,2 @@
-.github
-.git
-.dockerignore
-scripts
-Dockerfile
+node_modules
+.pnpm-store

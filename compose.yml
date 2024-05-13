@@ -1,5 +1,3 @@
-version: "3"
-
 x-base-service: &base-service
   build: .
   image: ghcr.io/libxmlwasm/libxml.wasm/builder:latest
@@ -7,6 +5,8 @@ x-base-service: &base-service
   volumes:
     - .:/src
     - embuilder-cache:/emsdk/upstream/emscripten/cache
+    - node_modules:/src/node_modules
+    - pnpm-store:/src/.pnpm-store
   working_dir: /src
   environment:
   - TERM=xterm-256color
@@ -18,6 +18,11 @@ services:
   wasm:
     <<: *base-service
     command: /src/scripts/wasm.sh
+  debug:
+    <<: *base-service
+    command: bash -c "while :; do sleep 3600; done"
 
 volumes:
   embuilder-cache:
+  node_modules:
+  pnpm-store:

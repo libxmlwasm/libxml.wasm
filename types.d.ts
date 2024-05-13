@@ -20,7 +20,34 @@ class Document {
    * @returns XML string
    */
   toString(): string;
+
+  /**
+   * Get Document's children nodes
+   */
+  getChildNodes(): Node[];
 }
+
+export type NodeType =
+  "XML_ELEMENT_NODE"
+  | "XML_ATTRIBUTE_NODE"
+  | "XML_TEXT_NODE"
+  | "XML_CDATA_SECTION_NODE"
+  | "XML_ENTITY_REF_NODE"
+  | "XML_ENTITY_NODE"
+  | "XML_PI_NODE"
+  | "XML_COMMENT_NODE"
+  | "XML_DOCUMENT_NODE"
+  | "XML_DOCUMENT_TYPE_NODE"
+  | "XML_DOCUMENT_FRAG_NODE"
+  | "XML_NOTATION_NODE"
+  | "XML_HTML_DOCUMENT_NODE"
+  | "XML_DTD_NODE"
+  | "XML_ELEMENT_DECL"
+  | "XML_ATTRIBUTE_DECL"
+  | "XML_ENTITY_DECL"
+  | "XML_NAMESPACE_DECL"
+  | "XML_XINCLUDE_START"
+  | "XML_XINCLUDE_END"
 
 /**
  * Node
@@ -61,13 +88,16 @@ abstract class Node {
    * - `XML_XINCLUDE_START`
    * - `XML_XINCLUDE_END`
    */
-  type: string;
+  type: NodeType;
 
   /** Get node's parent node */
   getParent(): Node;
 
   /** Stringify Node like `<div>text</div>` */
   toString(): string;
+
+  /** Get Node by XPath */
+  getNode(xpath: string): Node[];
 }
 
 /**
@@ -84,4 +114,5 @@ interface LibXML {
   parseHTML: (html: string) => Document;
 }
 
-export = LibXML_WASM;
+// export = LibXML_WASM;
+export default LibXML_WASM;

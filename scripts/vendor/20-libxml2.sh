@@ -1,9 +1,13 @@
 #!/bin/bash -e
 
-VERSION="2.12.5"
+set -uo pipefail
+
+VERSION="2.12.6"
 DIRNAME="libxml2-${VERSION}"
 FILENAME="${DIRNAME}.tar.xz"
 TMPDIR=${TMPDIR:-$(realpath "./cache")}
+mkdir $(realpath "./cache") "$TMPDIR/build" -p
+mkdir $(realpath "./cache") "$TMPDIR/build" -p
 EXTRACT_BASE=${EXTRACT_BASE:-$(realpath "$TMPDIR/build")}
 DIRPATH="${EXTRACT_BASE}/${DIRNAME}"
 FILEPATH="${TMPDIR}/${FILENAME}"
@@ -14,7 +18,8 @@ echo "Building $DIRNAME ..."
 
 if [ ! -d "$DIRPATH" ]; then
   if [ ! -f "$FILEPATH" ]; then
-    mkdir -p "$TMPDIR"
+    mkdir -p $(dirname "$FILEPATH")
+    mkdir -p $(dirname "$FILEPATH")
     curl -kLo "$FILEPATH" "$URL"
   else
     echo "File $FILEPATH already exists."

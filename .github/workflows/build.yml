@@ -1,9 +1,12 @@
-name: Build and Test
+name: Build and Test and Publish
 
 on:
   push:
     paths-ignore:
-      - 'README.md'
+      - README.md
+      - LICENSE
+      
+
   workflow_dispatch:
     inputs:
       skip-build-image:
@@ -11,9 +14,19 @@ on:
         type: boolean
         default: false
 
+  release:
+    types: [published]
+  
+  pull_request:
+    types: [opened, synchronize, reopened]
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+env:
+  GITHUB_TOKEN: "_DUMMY_"
+  NODE_AUTH_TOKEN: "_DUMMY_"
 
 jobs:
   build-image:
@@ -30,7 +43,7 @@ jobs:
     - uses: docker/login-action@v3
       with:
         registry: ghcr.io
-        username: ${{ github.actor }}
+        username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - uses: docker/metadata-action@v5
       id: meta
@@ -40,9 +53,15 @@ jobs:
           type=raw,value=latest
           type=ref,event=branch
           type=ref,event=pr
+          type=ref,event=tag
           type=semver,pattern={{version}}
           type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}}
           type=sha
+        labels: |
+          org.opencontainers.image.title=Builder
+          org.opencontainers.image.description=Builder image for libxmlwasm
+          org.opencontainers.image.source=${{ github.repository }}
     - name: Prepare container
       uses: docker/build-push-action@v5
       with:
@@ -58,24 +77,79 @@ jobs:
     needs: build-image
     steps:
     - uses: actions/checkout@v4
+    - name: Cache Primes
+      uses: actions/cache@v4
+      with:
+        path: |
+          cache
+        key: buildcache
     - uses: actions/setup-node@v4
       with:
         node-version-file: ".nvmrc"
+    - uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build
       run: |
         mkdir -p prefix dist wasm-build cache
         chmod o+w prefix dist wasm-build cache
-        docker compose up ci
-    - name: Check files
-      run: ls . */
+        docker compose up ci --no-build
     - name: Install dependencies
-      run: corepack yarn install --immutable
+      run: corepack pnpm install --frozen-lockfile
     - name: Run tests
-      run: corepack yarn test
+      run: corepack pnpm test
     - name: Create package tarball
-      run: corepack yarn pack -o libxmlwasm.tgz
+      run: corepack pnpm pack
     - name: Upload package tarball
       uses: actions/upload-artifact@v4
       with:
-        name: libxmlwasm.tgz
-        path: libxmlwasm.tgz
+        name: libxml.wasm.tgz
+        path: libxml.wasm-*.tgz
+  publish:
+    name: Publish packages
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ github.event_name != 'pull_request' && !startsWith(github.ref_name, 'dependabot/') }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: ".nvmrc"
+    - name: Download package tarball
+      uses: actions/download-artifact@v4
+      with:
+        name: libxml.wasm.tgz
+    - name: Unpack package tarball
+      run: |
+        tar axf libxml.wasm-*.tgz
+        mv package/* .
+        rm -fr package
+    - name: Prepare package
+      id: package
+      run: |
+        if [ ${{ github.ref_name }} = 'master' || ${{ github.ref_name }} = 'main' ]; then
+          echo "This is the main branch"
+          echo "tag=latest" >> $GITHUB_OUTPUT
+        else
+          echo "This is the develop branch"
+          ./scripts/jqout.sh '.version+="-${{ github.ref_name }}-${{ github.sha }}"' package.json
+          echo "tag=experimental" >> $GITHUB_OUTPUT
+        fi
+        echo "name=$(jq .name package.json)" >> $GITHUB_OUTPUT
+        echo "version=$(jq .version package.json)" >> $GITHUB_OUTPUT
+    - name: Publish package to NPM
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      run: |
+        corepack pnpm publish --access public --tag ${{ steps.package.outputs.tag }} --no-git-checks
+    - name: Publish package to GitHub Package Registry
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        ./scripts/jqout.sh '.name="@${{ github.repository_owner }}/wasm"' package.json
+        corepack pnpm publish --access public --tag ${{ steps.package.outputs.tag }} --no-git-checks

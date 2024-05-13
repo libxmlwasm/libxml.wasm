@@ -1,7 +1,8 @@
-// #include <cstring>
-#include <fstream>
 #include <iostream>
+#include <fstream>
 #include <vector>
+#include <string>
+#include <string.h>
 #include <libxml/HTMLparser.h>
 #include <libxml/xmlreader.h>
 #include <libxml/xpath.h>
@@ -83,6 +84,54 @@ public:
     return result;
   }
 
+  emscripten::val getNode(string xpathChar)
+  {
+    xmlXPathContextPtr xpathCtx = xmlXPathNewContext(node->doc);
+    if (xpathCtx == NULL)
+    {
+      xmlFreeDoc(node->doc);
+      throw "error: unable to create new XPath context";
+    }
+
+    xmlXPathObjectPtr xpathObj = xmlXPathEvalExpression((xmlChar *)xpathChar.c_str(), xpathCtx);
+    if (xpathObj == NULL)
+    {
+      xmlXPathFreeContext(xpathCtx);
+      xmlFreeDoc(node->doc);
+      throw "error: unable to evaluate xpath expression";
+    }
+
+    xmlNodeSetPtr nodes = xpathObj->nodesetval;
+    if (nodes == NULL)
+    {
+      xmlXPathFreeObject(xpathObj);
+      xmlXPathFreeContext(xpathCtx);
+      xmlFreeDoc(node->doc);
+      throw "error: nodes was NULL";
+    }
+
+    if (nodes->nodeMax == 0)
+    {
+      std::cerr << "error: no nodes found" << std::endl;
+    }
+
+    emscripten::val result = emscripten::val::array();
+    xmlNodePtr nodePtr;
+    Node *nodeC;
+
+    for (int i = 0; i < nodes->nodeNr; i++)
+    {
+      nodePtr = nodes->nodeTab[i];
+      nodeC = new Node(nodePtr);
+      result.call<void>("push", emscripten::val(nodeC));
+    }
+
+    xmlXPathFreeObject(xpathObj);
+    xmlXPathFreeContext(xpathCtx);
+
+    return result;
+  }
+
 private:
   xmlNodePtr node;
 };
@@ -95,7 +144,7 @@ public:
     doc = htmlReadMemory(htmlChar.c_str(), strlen(htmlChar.c_str()), "index.html", NULL, 0);
     if (doc == NULL)
     {
-      throw "error: could not parse file";
+      throw "error: could not parse text";
     }
   }
   ~Document()
@@ -110,6 +159,21 @@ public:
     string docStr((char *)buf->content);
     xmlBufferFree(buf);
     return docStr;
+  }
+
+  emscripten::val getChildNodes()
+  {
+    xmlNodePtr child = doc->children;
+    emscripten::val result = emscripten::val::array();
+    Node *nodeC;
+    while (child)
+    {
+      nodeC = new Node(child);
+      result.call<void>("push", emscripten::val(nodeC));
+      child = child->next;
+    }
+
+    return result;
   }
 
   emscripten::val getNode(string xpathChar)
@@ -153,6 +217,10 @@ public:
       nodeC = new Node(nodePtr);
       result.call<void>("push", emscripten::val(nodeC));
     }
+
+    xmlXPathFreeObject(xpathObj);
+    xmlXPathFreeContext(xpathCtx);
+
     return result;
   }
 
@@ -168,16 +236,18 @@ Document *parseHTML(string docStr)
 
 EMSCRIPTEN_BINDINGS(LibXMLWasm)
 {
-  class_<Node>("Node")
+  emscripten::class_<Node>("Node")
       .property("content", &Node::getContent)
       .property("name", &Node::getName)
       .property("attr", &Node::getAttr)
       .property("children", &Node::getChildren)
       .property("type", &Node::getType)
       .function("getParent", &Node::getParent, emscripten::allow_raw_pointers())
-      .function("toString", &Node::toString);
-  class_<Document>("Document")
+      .function("toString", &Node::toString)
+      .function("getNode", &Node::getNode, emscripten::allow_raw_pointers());
+  emscripten::class_<Document>("Document")
       .constructor<std::string>()
+      .function("getChildNodes", &Document::getChildNodes)
       .function("toString", &Document::toString)
       .function("getNode", &Document::getNode, emscripten::allow_raw_pointers());
   emscripten::function("parseHTML", &parseHTML, emscripten::allow_raw_pointers());
