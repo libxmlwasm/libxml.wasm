@@ -7,11 +7,18 @@
   "main": "dist/libxml.cjs",
   "module": "dist/libxml.mjs",
   "exports": {
-    "./cjs": "./dist/libxml.cjs",
-    "./esm": "./dist/libxml.mjs",
+    "./cjs": {
+      "require": "./dist/libxml.cjs",
+      "types": "./types.d.ts"
+    },
+    "./esm": {
+      "import": "./dist/libxml.mjs",
+      "types": "./types.d.ts"
+    },
     ".": {
       "require": "./dist/libxml.cjs",
-      "imoport": "./dist/libxml.mjs"
+      "imoport": "./dist/libxml.mjs",
+      "types": "./types.d.ts"
     }
   },
   "repository": {
