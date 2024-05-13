@@ -108,6 +108,9 @@ jobs:
       with:
         name: libxml.wasm.tgz
         path: libxml.wasm-*.tgz
+    - name: Fix cache permission
+      run: |
+        sudo chown -R $(whoami) prefix cache
   publish:
     name: Publish packages
     runs-on: ubuntu-latest
@@ -133,8 +136,8 @@ jobs:
     - name: Prepare package
       id: package
       run: |
-        if [ ${{ github.ref_name == 'master' }} ]; then
-          echo "This is the master branch"
+        if [ ${{ github.ref_name }} = 'master' || ${{ github.ref_name }} = 'main' ]; then
+          echo "This is the main branch"
           echo "tag=latest" >> $GITHUB_OUTPUT
         else
           echo "This is the develop branch"
