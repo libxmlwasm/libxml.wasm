@@ -5,6 +5,7 @@ on:
     paths-ignore:
       - README.md
       - LICENSE
+      
 
   workflow_dispatch:
     inputs:
@@ -105,8 +106,8 @@ jobs:
     - name: Upload package tarball
       uses: actions/upload-artifact@v4
       with:
-        name: libxmlwasm.tgz
-        path: libxml-wasm-*.tgz
+        name: libxml.wasm.tgz
+        path: libxml.wasm-*.tgz
   publish:
     name: Publish packages
     runs-on: ubuntu-latest
@@ -123,10 +124,10 @@ jobs:
     - name: Download package tarball
       uses: actions/download-artifact@v4
       with:
-        name: libxmlwasm.tgz
+        name: libxml.wasm.tgz
     - name: Unpack package tarball
       run: |
-        tar axf libxml-wasm-*.tgz
+        tar axf libxml.wasm-*.tgz
         mv package/* .
         rm -fr package
     - name: Prepare package
