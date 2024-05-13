@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+set -uo pipefail
+
 VERSION="1.3.1"
 DIRNAME="zlib-${VERSION}"
 FILENAME="${DIRNAME}.tar.gz"

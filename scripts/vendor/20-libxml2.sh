@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+set -uo pipefail
+
 VERSION="2.12.6"
 DIRNAME="libxml2-${VERSION}"
 FILENAME="${DIRNAME}.tar.xz"

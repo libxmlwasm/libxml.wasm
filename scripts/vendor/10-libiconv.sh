@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+set -uo pipefail
+
 VERSION="1.17"
 DIRNAME="libiconv-${VERSION}"
 FILENAME="${DIRNAME}.tar.gz"
