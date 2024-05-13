@@ -132,11 +132,11 @@ jobs:
     - name: Prepare package
       id: package
       run: |
-        if [ ${{ github.ref_name }} = 'master' || ${{ github.ref_name }} = 'main' ]; then
-          echo "This is the main branch"
+        if [ ${{ github.event_name }} = release ]; then
+          echo "This is stable release"
           echo "tag=latest" >> $GITHUB_OUTPUT
         else
-          echo "This is the develop branch"
+          echo "This is the develop release"
           ./scripts/jqout.sh '.version+="-${{ github.ref_name }}-${{ github.sha }}"' package.json
           echo "tag=experimental" >> $GITHUB_OUTPUT
         fi
