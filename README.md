@@ -1,5 +1,7 @@
 # libxml.wasm
 
+[Demo](https://libxmlwasm.github.io/)
+
 ## Installation
 
 ```bash

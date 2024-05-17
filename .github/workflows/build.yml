@@ -115,6 +115,9 @@ jobs:
     permissions:
       contents: read
       packages: write
+      id-token: write
+    env:
+      NPM_CONFIG_PROVENANCE: true
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
