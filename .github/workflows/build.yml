@@ -142,7 +142,7 @@ jobs:
           echo "tag=latest" >> $GITHUB_OUTPUT
         else
           echo "This is the develop release"
-          ./scripts/jqout.sh '.version+="-${REF_NAME//\//_}-${{ github.sha }}"' package.json
+          ./scripts/jqout.sh '.version+="-'${REF_NAME//\//_}'-${{ github.sha }}"' package.json
           echo "tag=experimental" >> $GITHUB_OUTPUT
         fi
         echo "name=$(jq .name package.json)" >> $GITHUB_OUTPUT
