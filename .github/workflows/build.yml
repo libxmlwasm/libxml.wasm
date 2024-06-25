@@ -134,13 +134,15 @@ jobs:
         rm -fr package
     - name: Prepare package
       id: package
+      env:
+        REF_NAME: ${{ github.ref_name }}
       run: |
         if [ ${{ github.event_name }} = release ]; then
           echo "This is stable release"
           echo "tag=latest" >> $GITHUB_OUTPUT
         else
           echo "This is the develop release"
-          ./scripts/jqout.sh '.version+="-${{ github.ref_name }}-${{ github.sha }}"' package.json
+          ./scripts/jqout.sh '.version+="-'${REF_NAME//\//-}'-${{ github.sha }}"' package.json
           echo "tag=experimental" >> $GITHUB_OUTPUT
         fi
         echo "name=$(jq .name package.json)" >> $GITHUB_OUTPUT
