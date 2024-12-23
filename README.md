@@ -47,3 +47,10 @@ console.log(h1.name)                   // "h1"
 console.log(h1.content)                // "Hello world"
 console.log(h1.attr.class)             // "title"
 ```
+
+## Issue Templates
+
+We have provided issue templates to help you report bugs and request features more effectively. Please use the appropriate template when creating an issue:
+
+- [Bug Report](.github/ISSUE_TEMPLATE/bug_report.md)
+- [Feature Request](.github/ISSUE_TEMPLATE/feature_request.md)
