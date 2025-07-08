@@ -46,7 +46,7 @@
     "types.d.ts"
   ],
   "devDependencies": {
-    "@swc/core": "^1.12.5",
+    "@swc/core": "^1.12.9",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.3",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
