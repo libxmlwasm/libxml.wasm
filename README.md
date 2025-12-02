@@ -1,5 +1,8 @@
 # libxml.wasm
 
+> [!NOTE]
+> The project is no longer maintained. The project has been archived.
+
 ## Installation
 
 ```bash
